@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Resume Upload Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">📄 Resume Match</h5>
+
+            {% if resume_data %}
+            <!-- Resume already uploaded -->
+            <div class="alert alert-success">
+                <strong>✅ Resume Active</strong><br>
+                📍 Location: {{ resume_data.location }}<br>
+                💼 Experience: {{ resume_data.experience }} years<br>
+                🛠️ Skills: {{ resume_data.skills|join:", " }}
+            </div>
+            <a href="{% url 'jobs:clear_resume' %}" class="btn btn-outline-danger btn-sm">
+                ❌ Clear Resume
+            </a>
+            {% else %}
+            <!-- Upload form -->
+            <form method="POST" action="{% url 'jobs:upload_resume' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="file" name="resume" class="form-control" accept=".pdf,.docx,.doc" required>
+                    <button type="submit" class="btn btn-primary">
+                        🚀 Match Jobs
+                    </button>
+                </div>
+                <small class="text-muted">Upload PDF or DOCX resume</small>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+
+    <!-- Jobs List -->
+    <h4>💼 Jobs ({{ total_jobs }} found)</h4>
+
+    <div class="row">
+        {% for job in jobs %}
+        <div class="col-md-6 mb-3">
+            <div class="card h-100 {% if job.match_score >= 60 %}border-success{% endif %}">
+                <div class="card-body">
+
+                    <!-- Match Score Badge -->
+                    {% if job.match_score > 0 %}
+                    <div class="float-end text-center">
+                        <span
+                            class="badge bg-{% if job.match_score >= 75 %}success{% elif job.match_score >= 50 %}warning{% else %}secondary{% endif %} fs-6">
+                            {{ job.match_score }}%
+                        </span><br>
+
+                        <!-- Star Rating - Partial Fill -->
+                        <small>
+                            <span style="position:relative; display:inline-block; letter-spacing:2px;">
+                                <span style="color:#ddd; font-size:18px;">★★★★★</span>
+                                <span class="star-fill" style="width:{{ job.star_fill_pct }}%;">★★★★★</span>
+                            </span>
+                        </small>
+                    </div>
+                    {% endif %}
+
+                    <h6 class="card-title">{{ job.title }}</h6>
+                    <p class="card-text mb-1">
+                        🏢 {{ job.company }}<br>
+                        📍 {{ job.location }}<br>
+                        💰 {{ job.salary|default:"Not specified" }}<br>
+                        💼 {{ job.experience|default:"Any" }}
+                    </p>
+
+                    <!-- Skills -->
+                    {% if job.skills %}
+                    <div class="mt-2">
+                        <p class="text-muted small">{{ job.skills|truncatechars:100 }}</p>
+                    </div>
+                    {% endif %}
+
+                    <a href="{{ job.apply_link }}" target="_blank" class="btn btn-sm btn-primary mt-2">Apply Now</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                No jobs found. Run the scraper first!
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">← Prev</a>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next →</a>
+        </li>
+        {% endif %}
+
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,85 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Smart Job Manager</title>
+
+        <!-- Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background: #f4f7fb;
+                margin: 0;
+                padding: 0;
+            }
+
+            .top-bar {
+                background: #111827;
+                color: white;
+                padding: 15px 25px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .top-bar a {
+                color: white;
+                margin-left: 15px;
+                text-decoration: none;
+            }
+
+            .top-bar a:hover {
+                text-decoration: underline;
+            }
+
+            .msg {
+                padding: 10px;
+                background: #e8f5e9;
+                color: green;
+                margin: 10px;
+                border-radius: 6px;
+            }
+
+            /* Star partial fill */
+            .star-fill {
+                position: absolute;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                white-space: nowrap;
+                color: #f5a623;
+                font-size: 18px;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <!-- NAVBAR -->
+        <div class="top-bar">
+            <h4 style="margin:0;">🚀 Smart Job Manager</h4>
+
+            <div>
+                <a href="{% url 'home' %}">🏠 Home</a>
+                <a href="{% url 'dashboard' %}">📊 Dashboard</a>
+            </div>
+        </div>
+
+        <!-- MESSAGES -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="msg">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- MAIN CONTENT -->
+        {% block content %}{% endblock %}
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    </body>
+    </html>

@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  *{box-sizing:border-box;}
+
+  /* ── NAVBAR ── */
+  .top-bar{
+    background:#07080d !important;
+    padding:0 48px !important;
+    height:66px;
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  .nb-brand{display:flex;align-items:center;gap:10px;}
+  .nb-logo{
+    width:32px;height:32px;border-radius:9px;
+    background:linear-gradient(135deg,#4f46e5,#7c3aed);
+    display:flex;align-items:center;justify-content:center;font-size:0.9rem;
+  }
+  .top-bar h4{font-size:0.97rem;font-weight:700;letter-spacing:0.2px;display:flex;align-items:center;gap:10px;}
+  .nb-tag{font-size:0.65rem;background:rgba(99,102,241,0.2);color:#a5b4fc;padding:2px 8px;border-radius:4px;font-weight:700;letter-spacing:1px;}
+  .top-bar a{color:rgba(255,255,255,0.52) !important;padding:7px 15px;border-radius:7px;font-size:0.85rem;transition:all 0.2s;margin-left:2px !important;}
+  .top-bar a:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.9) !important;text-decoration:none !important;}
+  .nb-cta-link{background:linear-gradient(135deg,#4f46e5,#7c3aed) !important;color:white !important;font-weight:600 !important;border-radius:8px !important;}
+  .nb-cta-link:hover{filter:brightness(1.1);color:white !important;}
+
+  /* ── PAGE MAX WIDTH ── */
+  .lp-wrap{max-width:1060px;margin:0 auto;padding:0 52px;}
+  @media(max-width:768px){.lp-wrap{padding:0 20px;}}
+
+  /* ── HERO ── */
+  .lp-hero{background:#07080d;padding:100px 0 90px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.05);}
+  .lp-hi{max-width:680px;margin:0 auto;padding:0 24px;}
+  .lp-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.22);
+    color:#a5b4fc;padding:7px 18px;border-radius:50px;
+    font-size:0.77rem;font-weight:500;margin-bottom:30px;letter-spacing:0.3px;
+  }
+  .lp-pulse{width:6px;height:6px;border-radius:50%;background:#6366f1;animation:blink 2s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+  .lp-h1{
+    font-size:clamp(2.3rem,5vw,3.5rem);font-weight:800;
+    color:white;line-height:1.12;letter-spacing:-1.5px;margin-bottom:20px;
+  }
+  .lp-grad{
+    background:linear-gradient(135deg,#6366f1 0%,#a78bfa 50%,#60a5fa 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .lp-sub{color:rgba(255,255,255,0.4);font-size:1.02rem;line-height:1.8;margin:0 auto 38px;}
+  .lp-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  .btn-pp{
+    background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white !important;
+    padding:14px 30px;border-radius:10px;text-decoration:none !important;
+    font-size:0.93rem;font-weight:600;transition:all 0.2s;display:inline-block;
+    border:1px solid rgba(255,255,255,0.1);
+  }
+  .btn-pp:hover{transform:translateY(-2px);filter:brightness(1.12);}
+  .btn-oo{
+    background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.72) !important;
+    padding:13px 30px;border-radius:10px;text-decoration:none !important;
+    font-size:0.93rem;font-weight:600;border:1px solid rgba(255,255,255,0.11);
+    transition:all 0.2s;display:inline-block;
+  }
+  .btn-oo:hover{background:rgba(255,255,255,0.08);color:white !important;transform:translateY(-2px);}
+  .lp-stats{
+    display:flex;justify-content:center;
+    gap:clamp(28px,5vw,60px);
+    margin-top:64px;padding-top:44px;
+    border-top:1px solid rgba(255,255,255,0.07);flex-wrap:wrap;
+  }
+  .lp-sn{font-size:1.95rem;font-weight:800;color:white;letter-spacing:-0.5px;}
+  .lp-sl{font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:5px;letter-spacing:1px;text-transform:uppercase;}
+
+  /* ── STEPS ── */
+  .lp-steps-sec{background:#0b0c14;padding:56px 0;}
+  .lp-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;}
+  .lp-step{padding:30px 24px;text-align:center;border-right:1px solid rgba(255,255,255,0.06);}
+  .lp-step:last-child{border-right:none;}
+  .lp-snum{
+    width:40px;height:40px;border-radius:11px;
+    background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.22);
+    color:#a5b4fc;font-size:0.95rem;font-weight:700;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 14px;
+  }
+  .lp-stitle{font-size:0.9rem;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:7px;}
+  .lp-ssub{font-size:0.78rem;color:rgba(255,255,255,0.3);line-height:1.6;}
+
+  /* ── PLATFORM CARDS ── */
+  .lp-plat{padding:76px 0;background:#f7f8fc;}
+  .lp-eyebrow{font-size:0.7rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#6366f1;margin-bottom:9px;}
+  .lp-st{font-size:1.78rem;font-weight:700;color:#0f172a;margin-bottom:7px;letter-spacing:-0.3px;}
+  .lp-ss{color:#64748b;font-size:0.9rem;margin-bottom:46px;line-height:1.7;}
+  .lp-pcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;}
+  .lp-pc{
+    border-radius:18px;padding:34px 24px;color:white;
+    text-decoration:none !important;display:block;
+    transition:transform 0.28s,box-shadow 0.28s;
+    position:relative;overflow:hidden;
+  }
+  .lp-pc::before{
+    content:'';position:absolute;top:0;left:-100%;
+    width:60%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.09),transparent);
+    transition:left 0.5s;
+  }
+  .lp-pc:hover::before{left:140%;}
+  .lp-pc:hover{transform:translateY(-7px);box-shadow:0 24px 52px rgba(0,0,0,0.2);}
+  .pc-li{background:linear-gradient(145deg,#0a66c2,#0e86d4);}
+  .pc-na{background:linear-gradient(145deg,#d4410a,#f97316);}
+  .pc-in{background:linear-gradient(145deg,#1a3fa1,#2563eb);}
+  .lp-pc-icon{font-size:2rem;margin-bottom:13px;display:block;}
+  .lp-pc-name{font-size:1.12rem;font-weight:700;margin-bottom:8px;}
+  .lp-pc-desc{font-size:0.82rem;opacity:0.8;line-height:1.6;margin-bottom:16px;}
+  .lp-pc-chip{display:inline-block;background:rgba(255,255,255,0.18);border-radius:50px;padding:4px 14px;font-size:0.74rem;font-weight:600;}
+
+  /* ── SPEED INFO CARDS ── */
+  .lp-info{padding:76px 0;background:white;}
+  .lp-icards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;}
+  .lp-ic{
+    background:white;border-radius:16px;padding:26px 24px;
+    border:1px solid #e8edf3;
+    transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;
+  }
+  .lp-ic:hover{border-color:#6366f1;transform:translateY(-4px);box-shadow:0 14px 36px rgba(99,102,241,0.09);}
+  .lp-ic-head{display:flex;align-items:center;gap:13px;margin-bottom:18px;}
+  .lp-ic-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+  .ico-w{background:#fef3c7;}.ico-m{background:#dbeafe;}.ico-f{background:#d1fae5;}
+  .lp-ic-nm{font-size:0.95rem;font-weight:700;color:#0f172a;margin:0;}
+  .lp-ic-sb{font-size:0.75rem;color:#94a3b8;margin:2px 0 0;}
+  .spbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+  .sbt{flex:1;height:5px;border-radius:50px;background:#f1f5f9;overflow:hidden;}
+  .sbf{height:100%;border-radius:50px;}
+  .sf-s{width:28%;background:#f59e0b;}.sf-m{width:60%;background:#3b82f6;}.sf-f{width:95%;background:#10b981;}
+  .sp-l{font-size:0.72rem;font-weight:700;white-space:nowrap;}
+  .sl-s{color:#d97706;}.sl-m{color:#2563eb;}.sl-f{color:#059669;}
+  .lp-irow{display:flex;align-items:flex-start;gap:9px;margin-bottom:9px;font-size:0.84rem;color:#475569;line-height:1.55;}
+  .lp-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+  .d-w{background:#f59e0b;}.d-m{background:#3b82f6;}.d-f{background:#10b981;}
+
+  /* ── PORTFOLIO / FRIEND SECTION ── */
+  .lp-port{background:linear-gradient(135deg,#0f0c29,#1a1040,#0d1b3e);padding:80px 0;}
+  .lp-port-inner{
+    max-width:900px;margin:0 auto;padding:0 52px;
+    display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;
+  }
+  @media(max-width:700px){.lp-port-inner{grid-template-columns:1fr;gap:32px;padding:0 20px;}}
+  .port-eyebrow{font-size:0.7rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#a78bfa;margin-bottom:10px;}
+  .port-title{font-size:1.65rem;font-weight:700;color:white;line-height:1.25;margin-bottom:14px;letter-spacing:-0.3px;}
+  .port-sub{color:rgba(255,255,255,0.38);font-size:0.87rem;line-height:1.78;margin-bottom:28px;}
+  .port-btn{
+    display:inline-flex;align-items:center;gap:10px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.14);
+    color:white !important;padding:13px 22px;border-radius:12px;
+    font-size:0.88rem;font-weight:600;
+    text-decoration:none !important;
+    transition:all 0.25s;
+  }
+  .port-btn:hover{background:rgba(255,255,255,0.11);border-color:rgba(255,255,255,0.28);transform:translateY(-2px);}
+  .port-arr{transition:transform 0.2s;}
+  .port-btn:hover .port-arr{transform:translateX(4px);}
+  .port-card{
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:20px;padding:28px;
+  }
+  .port-avatar{
+    width:50px;height:50px;border-radius:13px;
+    background:linear-gradient(135deg,#7c3aed,#4f46e5);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.3rem;margin-bottom:15px;
+  }
+  .port-name{font-size:1rem;font-weight:700;color:white;margin-bottom:4px;}
+  .port-role{font-size:0.78rem;color:rgba(255,255,255,0.38);margin-bottom:15px;}
+  .port-tags{display:flex;flex-wrap:wrap;gap:6px;}
+  .port-tag{
+    background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.25);
+    color:#a5b4fc;padding:4px 10px;border-radius:6px;font-size:0.71rem;font-weight:600;
+  }
+  .port-live{
+    display:flex;align-items:center;gap:7px;
+    color:#a78bfa;font-size:0.79rem;margin-top:15px;
+    padding-top:13px;border-top:1px solid rgba(255,255,255,0.07);font-weight:500;
+  }
+  .port-green-dot{width:6px;height:6px;border-radius:50%;background:#10b981;}
+
+  /* ── CTA ── */
+  .lp-cta{background:#06070c;padding:84px 24px;text-align:center;}
+  .lp-cta-t{font-size:1.95rem;font-weight:800;color:white;letter-spacing:-0.5px;margin-bottom:10px;}
+  .lp-cta-s{color:rgba(255,255,255,0.35);font-size:0.92rem;margin-bottom:34px;line-height:1.75;}
+
+  /* ── FOOTER ── */
+  .lp-foot{
+    background:#04050a;padding:20px 48px;
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+    border-top:1px solid rgba(255,255,255,0.04);
+  }
+  .lp-fl{color:rgba(255,255,255,0.25);font-size:0.8rem;}
+  .lp-fl strong{color:rgba(255,255,255,0.45);}
+  .lp-fr{color:rgba(255,255,255,0.18);font-size:0.75rem;}
+  .lp-heart{color:#ef4444;}
+</style>
+
+<!-- HERO -->
+<section class="lp-hero">
+  <div class="lp-hi">
+    <div class="lp-badge"><span class="lp-pulse"></span>AI-Powered &nbsp;·&nbsp; Live Job Intelligence</div>
+    <h1 class="lp-h1">Find Jobs That<br><span class="lp-grad">Match Your Skills</span></h1>
+    <p class="lp-sub">Scrape live listings from LinkedIn, Naukri &amp; Indeed in seconds.<br>AI instantly scores and ranks every job against your resume.</p>
+    <div class="lp-btns">
+      <a href="{% url 'dashboard' %}" class="btn-pp">📊 Open Dashboard</a>
+      <a href="{% url 'dashboard' %}" class="btn-oo">⚡ Start Scraping</a>
+    </div>
+    <div class="lp-stats">
+      <div><div class="lp-sn">3+</div><div class="lp-sl">Platforms</div></div>
+      <div><div class="lp-sn">60+</div><div class="lp-sl">Jobs / Search</div></div>
+      <div><div class="lp-sn">AI</div><div class="lp-sl">Resume Match</div></div>
+      <div><div class="lp-sn">100%</div><div class="lp-sl">Free</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="lp-steps-sec">
+  <div class="lp-wrap">
+    <div class="lp-steps">
+      <div class="lp-step"><div class="lp-snum">1</div><div class="lp-stitle">Choose Platform</div><div class="lp-ssub">Pick LinkedIn, Naukri, or Indeed</div></div>
+      <div class="lp-step"><div class="lp-snum">2</div><div class="lp-stitle">Scrape Jobs</div><div class="lp-ssub">Enter title &amp; location — AI fetches live listings</div></div>
+      <div class="lp-step"><div class="lp-snum">3</div><div class="lp-stitle">Upload Resume</div><div class="lp-ssub">PDF/DOCX — skills auto-extracted instantly</div></div>
+      <div class="lp-step"><div class="lp-snum">4</div><div class="lp-stitle">Get Match Score</div><div class="lp-ssub">Every job ranked by your exact profile fit</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<section class="lp-plat">
+  <div class="lp-wrap">
+    <div class="lp-eyebrow">Platforms</div>
+    <h2 class="lp-st">Choose Your Job Platform</h2>
+    <p class="lp-ss">Click a platform to start scraping live listings directly from the source</p>
+    <div class="lp-pcards">
+      <a href="{% url 'dashboard' %}?platform=linkedin" class="lp-pc pc-li">
+        <span class="lp-pc-icon">💼</span>
+        <div class="lp-pc-name">LinkedIn</div>
+        <div class="lp-pc-desc">Premium global listings. Best for senior and tech roles worldwide.</div>
+        <span class="lp-pc-chip">⏱ Moderate Speed</span>
+      </a>
+      <a href="{% url 'dashboard' %}?platform=naukri" class="lp-pc pc-na">
+        <span class="lp-pc-icon">🇮🇳</span>
+        <div class="lp-pc-name">Naukri</div>
+        <div class="lp-pc-desc">India's largest portal. Static HTML makes it the fastest and most reliable.</div>
+        <span class="lp-pc-chip">⚡ Fastest</span>
+      </a>
+      <a href="{% url 'dashboard' %}?platform=indeed" class="lp-pc pc-in">
+        <span class="lp-pc-icon">🔍</span>
+        <div class="lp-pc-name">Indeed</div>
+        <div class="lp-pc-desc">Global aggregator. Faster than LinkedIn — needs smart parsing for best results.</div>
+        <span class="lp-pc-chip">🚀 Fast</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SPEED INFO -->
+<section class="lp-info">
+  <div class="lp-wrap">
+    <div class="lp-eyebrow" style="color:#6366f1;">How It Works</div>
+    <h2 class="lp-st">Why Speed Differs Across Platforms</h2>
+    <p class="lp-ss">Each platform has a different structure — this directly affects how fast we extract job data</p>
+    <div class="lp-icards">
+
+      <div class="lp-ic">
+        <div class="lp-ic-head">
+          <div class="lp-ic-icon ico-w">⏳</div>
+          <div><p class="lp-ic-nm">LinkedIn</p><p class="lp-ic-sb">Slowest · anti-bot protected</p></div>
+        </div>
+        <div class="spbar"><div class="sbt"><div class="sbf sf-s"></div></div><span class="sp-l sl-s">Slow</span></div>
+        <div class="lp-irow"><span class="lp-dot d-w"></span>JS renders content dynamically — no static HTML available</div>
+        <div class="lp-irow"><span class="lp-dot d-w"></span>Each job card must be clicked individually for description</div>
+        <div class="lp-irow"><span class="lp-dot d-w"></span>Strong bot detection — requires slow human-like scrolling</div>
+        <div class="lp-irow"><span class="lp-dot d-w"></span>Login session required for full job details access</div>
+      </div>
+
+      <div class="lp-ic">
+        <div class="lp-ic-head">
+          <div class="lp-ic-icon ico-m">🚀</div>
+          <div><p class="lp-ic-nm">Indeed</p><p class="lp-ic-sb">Medium · faster than LinkedIn</p></div>
+        </div>
+        <div class="spbar"><div class="sbt"><div class="sbf sf-m"></div></div><span class="sp-l sl-m">Medium</span></div>
+        <div class="lp-irow"><span class="lp-dot d-m"></span>Semi-static pages — only partial JS rendering needed</div>
+        <div class="lp-irow"><span class="lp-dot d-m"></span>Job cards load in list — fewer individual clicks needed</div>
+        <div class="lp-irow"><span class="lp-dot d-m"></span>Moderate bot protection — manageable with small delays</div>
+        <div class="lp-irow"><span class="lp-dot d-m"></span>No login needed — open listings accessible directly</div>
+      </div>
+
+      <div class="lp-ic">
+        <div class="lp-ic-head">
+          <div class="lp-ic-icon ico-f">⚡</div>
+          <div><p class="lp-ic-nm">Naukri</p><p class="lp-ic-sb">Fastest · clean static HTML</p></div>
+        </div>
+        <div class="spbar"><div class="sbt"><div class="sbf sf-f"></div></div><span class="sp-l sl-f">Fast</span></div>
+        <div class="lp-irow"><span class="lp-dot d-f"></span>Pure static HTML — BeautifulSoup extracts directly</div>
+        <div class="lp-irow"><span class="lp-dot d-f"></span>Skills, salary, experience all inside the listing card</div>
+        <div class="lp-irow"><span class="lp-dot d-f"></span>Minimal bot protection — reliable and consistent</div>
+        <div class="lp-irow"><span class="lp-dot d-f"></span>URL-based pagination — 60 jobs in just 3 page clicks</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO / FRIEND SECTION -->
+<section class="lp-port">
+  <div class="lp-port-inner">
+    <div>
+      <div class="port-eyebrow">Built by developers, for developers</div>
+      <div class="port-title">Want to build a stunning portfolio website?</div>
+      <p class="port-sub">
+        My friend has built an incredible platform that helps developers create professional portfolios in minutes — no design skills needed.
+        A great portfolio gets you noticed faster than any resume.
+      </p>
+      <a href="https://www.buildyourportfolio.in/" target="_blank" rel="noopener" class="port-btn">
+        🌐 Visit buildyourportfolio.in <span class="port-arr">→</span>
+      </a>
+    </div>
+    <div>
+      <div class="port-card">
+        <div class="port-avatar">🧑‍💻</div>
+        <div class="port-name">Build Your Portfolio</div>
+        <div class="port-role">Professional Portfolio Builder Platform</div>
+        <div class="port-tags">
+          <span class="port-tag">Portfolio</span>
+          <span class="port-tag">Developer Tools</span>
+          <span class="port-tag">Career Growth</span>
+          <span class="port-tag">Web Design</span>
+          <span class="port-tag">Free to Use</span>
+        </div>
+        <div class="port-live">
+          <span class="port-green-dot"></span>
+          buildyourportfolio.in &nbsp;·&nbsp; Live Now
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="lp-cta">
+  <div class="lp-cta-t">Ready to find your next job?</div>
+  <p class="lp-cta-s">Upload your resume and let AI rank every listing<br>by how well it matches your exact skill set.</p>
+  <a href="{% url 'dashboard' %}" class="btn-pp" style="font-size:0.97rem;padding:15px 38px;">🚀 Open Dashboard</a>
+</section>
+
+<!-- FOOTER -->
+<div class="lp-foot">
+  <div class="lp-fl">Made with <span class="lp-heart">❤️</span> by <strong>Gautam Kumawat</strong></div>
+  <div class="lp-fr">Smart Job Manager &nbsp;·&nbsp; AI-Powered &nbsp;·&nbsp; 2025</div>
+</div>
+
+{% endblock %}
