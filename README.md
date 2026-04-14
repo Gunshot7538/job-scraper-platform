@@ -41,9 +41,9 @@ A powerful **Django-based web application** that automatically scrapes job listi
 
 ![Dashboard](assets/dashboard.png)
 
-### 🔍 Job Results
+###  📊 Platform
 
-![Jobs](assets/jobs.png)
+![Job Results](assets/platform.png)
 
 ---
 
