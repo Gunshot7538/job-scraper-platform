@@ -1,683 +1,827 @@
- <!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobFusion | Premium Job Manager</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <style>
+{% block navbar %}{% endblock %}
+{% block messages %}{% endblock %}
+
+{% block content %}
+<style>
+    @import url('https://api.fontshare.com/v2/css?f[]=nexa@900,700,400,100&display=swap');
+
+    :root {
+        --bg: #030209;
+        --bg2: #070614;
+        --bg3: #0d0b1e;
+        --accent: #6366f1;
+        --accent-light: #818cf8;
+        --accent-glow: rgba(99, 102, 241, 0.15);
+        --border: rgba(255, 255, 255, 0.08);
+        --border2: rgba(255, 255, 255, 0.15);
+        --t1: #f8fafc;
+        --t2: #94a3b8;
+        --t3: #475569;
+        --card: rgba(13, 11, 30, 0.6);
+        --radius: 12px;
+        --font-main: 'Outfit', sans-serif;
+        --stat-grad: linear-gradient(135deg, #fff 0%, var(--accent-light) 100%);
+    }
+
+    /* Theme Variants */
+    body.theme-green {
+        --accent: #10b981;
+        --accent-light: #34d399;
+        --accent-glow: rgba(16, 185, 129, 0.15);
+    }
+    body.theme-gold {
+        --accent: #f59e0b;
+        --accent-light: #fbbf24;
+        --accent-glow: rgba(245, 158, 11, 0.15);
+    }
+    body.theme-light {
+        --bg: #f8fafc;
+        --bg2: #f1f5f9;
+        --bg3: #e2e8f0;
+        --t1: #0f172a;
+        --t2: #475569;
+        --t3: #94a3b8;
+        --border: rgba(0, 0, 0, 0.08);
+        --border2: rgba(0, 0, 0, 0.15);
+        --card: #ffffff;
+        --stat-grad: linear-gradient(135deg, #0f172a 0%, #475569 100%);
+    }
+    body.theme-silver {
+        --accent: #6b7280;
+        --accent-light: #9ca3af;
+        --accent-glow: rgba(107, 114, 128, 0.15);
+    }
+
+    *, ::after, ::before {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: var(--font-main) !important;
+        background-color: var(--bg) !important;
+        color: var(--t1) !important;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        width: 100vw;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Typography System ── */
+    h1 { font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 800; letter-spacing: -0.02em; }
+    h2 { font-size: clamp(1.25rem, 4vw, 1.75rem); font-weight: 700; letter-spacing: -0.01em; }
+    h5 { font-size: 1.125rem; font-weight: 600; }
+    p { font-size: 0.9375rem; color: var(--t2); line-height: 1.6; }
+
+    /* ── Modern Layout ── */
+    #sidebar {
+        width: 280px;
+        background: var(--bg);
+        border-right: 1px solid var(--border);
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 1050;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #main-content {
+        margin-left: 280px;
+        width: calc(100% - 280px);
+        min-height: 100vh;
+        transition: all 0.4s ease;
+    }
+
+    .glass-card {
+        background: var(--card);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .glass-card:hover {
+        border-color: rgba(255,255,255,0.15);
+    }
+
+    /* ── Responsive Grid ── */
+    .dashboard-grid {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    @media (min-width: 768px) {
+        .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 1200px) {
+        .dashboard-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    /* ── Mobile Overrides ── */
+    @media (max-width: 991px) {
         #sidebar {
-            width: 0px;
-            transition: all 0.3s ease;
-            overflow: hidden;
-            white-space: nowrap;
+            width: 280px;
+            transform: translateX(-100%);
         }
+        #sidebar.mobile-active {
+            transform: translateX(0);
+        }
+        .custom-navbar {
+            padding: 0 15px !important;
+            height: auto !important;
+            min-height: 64px;
+        }
+        .dashboard-content {
+            padding: 1rem !important;
+        }
+    }
 
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        backdrop-filter: blur(4px);
+        z-index: 1040;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .custom-navbar {
+        min-height: 80px;
+        background: rgba(3, 2, 9, 0.9) !important;
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border) !important;
+        padding: 12px 1rem !important;
+        display: flex;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        width: 100%;
+    }
+
+    @media (min-width: 992px) {
+        .custom-navbar {
+            height: 90px;
+            padding: 0 40px !important;
+        }
+    }
+
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 20px;
+        color: var(--t2);
+        text-decoration: none;
+        font-weight: 500;
+        border-radius: 8px;
+        margin: 4px 16px;
+        transition: all 0.2s;
+    }
+
+    .sidebar-link:hover, .sidebar-link.active {
+        background: rgba(255,255,255,0.05);
+        color: var(--t1);
+    }
+
+    .btn-premium {
+        background: var(--accent);
+        color: white;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        transition: filter 0.2s;
+    }
+
+    .btn-premium:hover { filter: brightness(1.1); }
+
+
+    /* Grid Background */
+    .dashboard-wrapper {
+        position: relative;
+        min-height: 100vh;
+        background-color: var(--bg);
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    .dashboard-wrapper::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background-image:
+            linear-gradient(rgba(124, 92, 252, 0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(124, 92, 252, 0.04) 1px, transparent 1px);
+        background-size: 60px 60px;
+        mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+        pointer-events: none;
+        opacity: var(--theme-invert, 1);
+    }
+
+    #main-content {
+        margin-left: 0;
+        width: 100%;
+        min-height: 100vh;
+        position: relative;
+        z-index: 1;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @media (min-width: 992px) {
+        #sidebar {
+            width: 85px;
+            transform: translateX(0);
+        }
         #sidebar.expanded {
-            width: 260px;
+            width: 280px;
         }
-
         #main-content {
-            margin-left: 0px;
-            transition: all 0.3s ease;
-            width: 100%;
+            margin-left: 85px;
+            width: calc(100% - 85px);
         }
-
         #main-content.sidebar-expanded {
-            margin-left: 260px;
-            width: calc(100% - 260px);
+            margin-left: 280px;
+            width: calc(100% - 280px);
         }
+    }
 
-        .nav-text {
-            opacity: 0;
-            transition: opacity 0.2s;
-            display: none;
+    .glass-card {
+        background: var(--card) !important;
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border) !important;
+        border-radius: 20px !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .glass-card:hover {
+        border-color: var(--border2) !important;
+        background: var(--card) !important;
+        transform: translateY(-4px);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .job-row {
+        transition: all 0.2s ease;
+    }
+
+    .job-row:hover {
+        background: rgba(124, 92, 252, 0.03) !important;
+    }
+
+    /* Force transparency to fix visibility issues */
+    .table,
+    .table> :not(caption)>*>* {
+        background-color: transparent !important;
+        color: var(--t1) !important;
+        box-shadow: none !important;
+    }
+
+    .stat-card {
+        padding: 18px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .stat-val {
+        font-size: 1.8rem;
+        font-weight: 900;
+        background: var(--stat-grad);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1px;
+    }
+
+    .stat-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--t2);
+        font-weight: 700;
+    }
+
+    .custom-navbar {
+        background: rgba(4, 3, 12, 0.7) !important;
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border) !important;
+        height: 90px;
+        padding: 0 40px !important;
+        width: 100%;
+    }
+
+    @media (min-width: 992px) {
+        .custom-navbar {
+            padding: 0 40px !important;
+            height: 90px;
         }
+    }
 
-        .expanded .nav-text {
-            opacity: 1;
-            display: inline;
-        }
+    .sidebar-link {
+        color: var(--t2) !important;
+        border-radius: 18px !important;
+        margin: 6px 14px;
+        padding: 16px !important;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
 
-        .btn-scrape-animate {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+    .sidebar-link:hover {
+        background: rgba(124, 92, 252, 0.08) !important;
+        color: var(--t1) !important;
+    }
 
-        .btn-scrape-animate:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 20px rgba(81, 102, 226, 0.4) !important;
-            background-color: #3D4DB7 !important;
-        }
+    .sidebar-link.active {
+        background: var(--accent) !important;
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(124, 92, 252, 0.4);
+    }
 
-        .hover-row:hover {
-            background-color: #f8faff !important;
-        }
+    .nav-text {
+        opacity: 0;
+        white-space: nowrap;
+        margin-left: 15px;
+        font-weight: 600;
+        transition: opacity 0.3s;
+    }
 
-        .custom-scrollbar::-webkit-scrollbar {
-            height: 6px;
-        }
+    .expanded .nav-text {
+        opacity: 1;
+    }
 
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
+    .btn-premium {
+        background: var(--accent);
+        border: none;
+        color: white;
+        font-weight: 700;
+        border-radius: 14px;
+        padding: 12px 24px;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(124, 92, 252, 0.3);
+    }
 
-        .company-cell {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+    .btn-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(124, 92, 252, 0.5);
+        background: #6d4fe0;
+    }
 
-        .company-logo-box {
-            width: 48px;
-            height: 48px;
-            min-width: 48px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #e8efff, #dbe7ff);
-            border: 1px solid #d8e4ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #5166E2;
-            font-weight: 800;
-            font-size: 16px;
-            text-transform: uppercase;
-        }
+    .search-box-wrapper {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 10px 20px;
+        width: 100%;
+        max-width: 500px;
+        transition: all 0.3s;
+    }
 
-        .company-name {
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 2px;
-        }
+    .search-box-wrapper:focus-within {
+        border-color: var(--accent);
+        background: rgba(255, 255, 255, 0.07);
+        box-shadow: 0 0 0 4px rgba(124, 92, 252, 0.1);
+    }
 
-        .company-location {
-            font-size: 12px;
-            color: #64748b;
-            margin-bottom: 0;
-        }
+    .search-box-wrapper input {
+        background: transparent;
+        border: none;
+        color: white;
+        outline: none;
+        font-size: 14px;
+        width: 100%;
+    }
 
-        .job-title-main {
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 6px;
-        }
+    .user-profile-sidebar {
+        margin-top: auto;
+        padding: 20px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
 
-        .job-type-badge {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 5px 10px;
-            border-radius: 7px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
+    /* Glow Elements */
+    .glow-orb {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(124, 92, 252, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: -1;
+    }
+</style>
 
-        .job-type-fulltime {
-            background-color: #e8fff3;
-            color: #0f9f6e;
-        }
-
-        .job-type-contract {
-            background-color: #fff4df;
-            color: #d48a00;
-        }
-
-        .job-type-default {
-            background-color: #eef2ff;
-            color: #5166E2;
-        }
-
-        .stars {
-            position: relative;
-            display: inline-block;
-            font-size: 24px;
-        }
-
-        .stars-empty {
-            color: #ddd;
-        }
-
-        .stars-filled {
-            position: absolute;
-            top: 0;
-            left: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            color: #f5a623;
-            /* star_rating/5 * 100 = fill % */
-            width: calc(var(--fill) * 20%);
-        }
-    </style>
-</head>
-
-<body style="font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f4f7fe; margin: 0;">
-
-    {% extends 'base.html' %}
-    {% block content %}
+<div class="dashboard-wrapper">
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div class="glow-orb" style="top: -100px; right: -100px;"></div>
+    <div class="glow-orb"
+        style="bottom: -100px; left: -100px; background: radial-gradient(circle, rgba(167, 139, 250, 0.08) 0%, transparent 70%);">
+    </div>
 
     <div class="d-flex">
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <a href="{% url 'home' %}" class="p-4 d-flex align-items-center"
+                style="height: 100px; text-decoration: none; color: inherit;">
+                <div
+                    style="min-width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), #5b21b6); display: flex; align-items: center; justify-content: center; font-weight: 900; color: white; font-size: 18px;">
+                    JS</div>
+                <h4 class="nav-text mb-0 fw-bold" style="letter-spacing: -1px;">JobFusion</h4>
+            </a>
 
-        <div id="sidebar"
-            style="min-height: 100vh; background-color: #212880; color: #ffffff; position: fixed; left: 0; top: 0; z-index: 1050; box-shadow: 4px 0 10px rgba(0,0,0,0.1);">
-            <div class="p-3 border-bottom d-flex align-items-center justify-content-center"
-                style="border-color: rgba(255,255,255,0.1) !important; height: 75px;">
-                <h5 class="nav-text mb-0"
-                    style="font-weight: 800; background: linear-gradient(90deg, #fff 0%, #a5b4fc 100%); background-clip: text; -webkit-text-fill-color: transparent;">
-                    Job Seekrs
-                </h5>
-                <div class="collapsed-icon" style="font-weight: 800; font-size: 20px;">JS</div>
+            <div class="mt-2 flex-grow-1">
+                <a href="{% url 'home' %}" class="sidebar-link">
+                    <span style="font-size: 1.2rem; min-width: 24px;">🏠</span>
+                    <span class="nav-text">Home</span>
+                </a>
+                <a href="{% url 'dashboard' %}" class="sidebar-link active">
+                    <span style="font-size: 1.2rem; min-width: 24px;">📊</span>
+                    <span class="nav-text">Analytics Overview</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span style="font-size: 1.2rem; min-width: 24px;">🔎</span>
+                    <span class="nav-text">Smart Scraper</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span style="font-size: 1.2rem; min-width: 24px;">📁</span>
+                    <span class="nav-text">Job Repository</span>
+                </a>
             </div>
-            <div class="mt-4 px-2">
-                <ul class="nav flex-column">
-                    <li class="nav-item mb-2">
-                        <a href="#" class="nav-link text-white d-flex align-items-center p-3"
-                            style="background: rgba(255,255,255,0.1); border-radius: 12px;">
-                            <span style="font-size: 20px; min-width: 40px; text-align: center;">🏠</span>
-                            <span class="nav-text fw-semibold">Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="#" class="nav-link text-white-50 d-flex align-items-center p-3"
-                            style="border-radius: 12px;">
-                            <span style="font-size: 20px; min-width: 40px; text-align: center;">🔍</span>
-                            <span class="nav-text fw-semibold">Search Jobs</span>
-                        </a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a href="#" class="nav-link text-white-50 d-flex align-items-center p-3"
-                            style="border-radius: 12px;">
-                            <span style="font-size: 20px; min-width: 40px; text-align: center;">📋</span>
-                            <span class="nav-text fw-semibold">Scraped Jobs</span>
-                        </a>
-                    </li>
-                    <li class="nav-item mt-5">
-                        <form method="POST" action="{% url 'logout' %}">
-                            {% csrf_token %}
-                            <button type="submit"
-                                class="nav-link text-danger d-flex align-items-center p-3 w-100 border-0 bg-transparent"
-                                style="border-radius: 12px; cursor: pointer;">
-                                <span style="font-size: 20px; min-width: 40px; text-align: center;">🔑</span>
-                                <span class="nav-text fw-bold">Logout</span>
-                            </button>
-                        </form>
-                    </li>
-                </ul>
+
+            <div class="user-profile-sidebar">
+                <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=7c5cfc&color=fff"
+                    class="rounded-circle" width="36" height="36">
+                <div class="nav-text">
+                    <div class="fw-bold" style="font-size: 14px;">{{ request.user.username }}</div>
+                    <div class="text-muted" style="font-size: 11px;">Enterprise Account</div>
+                    <form method="POST" action="{% url 'logout' %}" class="mt-1">
+                        {% csrf_token %}
+                        <button type="submit" class="border-0 bg-transparent text-danger p-0 fw-bold"
+                            style="font-size: 11px;">Sign Out</button>
+                    </form>
+                </div>
             </div>
         </div>
 
+        <!-- Main Content -->
         <div id="main-content">
-
-            <nav class="navbar bg-white border-bottom px-4"
-                style="height: 75px; position: sticky; top: 0; z-index: 1000;">
-                <div class="container-fluid d-flex align-items-center">
-                    <button onclick="toggleSidebar()" class="btn btn-light border-0 me-3"
-                        style="border-radius: 10px; padding: 8px 12px;">☰</button>
-                    <h5 class="mb-0 fw-bold d-none d-md-block" style="color: #212880;">JobFusion</h5>
-
-                    <div class="ms-4 flex-grow-1 d-none d-lg-block" style="max-width: 400px;">
-                        <form method="GET" action="">
-                            <div class="input-group"
-                                style="background: #f4f7fe; border-radius: 12px; padding: 2px 10px; border: 1px solid #e2e8f0;">
-                                <span class="input-group-text bg-transparent border-0 text-muted">🔍</span>
-                                <input type="text" id="searchInput" name="q" value="{{ request.GET.q }}"
-                                    class="form-control bg-transparent border-0 shadow-none"
-                                    placeholder="Search by company, title, salary..." style="font-size: 14px;">
-                                <button type="submit" class="btn btn-sm">Search</button>
-                            </div>
-                        </form>
+            <nav class="navbar custom-navbar">
+                <div class="container-fluid d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <!-- First Row: Branding & Toggle -->
+                    <div class="d-flex align-items-center gap-3">
+                        <button onclick="toggleSidebar()" class="btn btn-dark border-0 d-flex align-items-center justify-content-center"
+                            style="border-radius: 12px; background: rgba(255,255,255,0.08); width: 44px; height: 44px; flex-shrink: 0;">
+                            <span>☰</span>
+                        </button>
+                        <h4 class="mb-0 fw-bold d-lg-none" style="letter-spacing: -1px; font-size: 1.35rem; color: var(--t1);">JobFusion</h4>
+                        
+                        <!-- Search (Desktop) -->
+                        <div class="search-box-wrapper d-none d-lg-flex align-items-center ms-3">
+                            <span class="text-muted me-3">🔍</span>
+                            <input type="text" id="searchInput" placeholder="Search insights...">
+                        </div>
                     </div>
 
-                    <div class="ms-auto d-flex align-items-center gap-3">
-                        <span class="fw-semibold text-muted" style="font-size: 14px;">{{ request.user.username }}</span>
+                    <!-- Second Row: Controls -->
+                    <div class="d-flex flex-wrap align-items-center gap-3 ms-auto justify-content-center justify-content-lg-end w-100 w-lg-auto">
+                        <!-- Theme Dots -->
+                        <div class="d-flex align-items-center gap-3 px-3 py-2"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; height: 44px;">
+                            <span class="text-muted small fw-bold d-none d-sm-inline">Theme</span>
+                            <div class="theme-dot" onclick="setTheme('purple')" data-theme="purple"
+                                style="width:16px; height:16px; border-radius:50%; background:#7c5cfc; cursor:pointer; transition: transform 0.2s;">
+                            </div>
+                            <div class="theme-dot" onclick="setTheme('green')" data-theme="green"
+                                style="width:16px; height:16px; border-radius:50%; background:#10b981; cursor:pointer; transition: transform 0.2s;">
+                            </div>
+                            <div class="theme-dot" onclick="setTheme('gold')" data-theme="gold"
+                                style="width:16px; height:16px; border-radius:50%; background:#f59e0b; cursor:pointer; transition: transform 0.2s;">
+                            </div>
+                            <div class="theme-dot" onclick="setTheme('light')" data-theme="light"
+                                style="width:16px; height:16px; border-radius:50%; background:#fff; cursor:pointer; border: 1px solid #ccc; transition: transform 0.2s;">
+                            </div>
+                        </div>
 
-                        <a href="{% url 'download_csv' %}" class="btn btn-success btn-sm fw-bold px-3"
-                            style="border-radius: 8px; font-size: 13px;">
-                            ⬇️ Download CSV
-                        </a>
-
-                        <form method="POST" action="{% url 'send_email' %}" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary btn-sm fw-bold px-3"
-                                style="border-radius: 8px; font-size: 13px;">
-                                📧 Send to Email
-                            </button>
-                        </form>
-
-                        <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=5166E2&color=fff"
-                            class="rounded-circle" width="35" height="35">
+                        <!-- Action Buttons -->
+                        <div class="d-flex align-items-center gap-2" style="height: 44px;">
+                            <a href="{% url 'download_csv' %}" class="btn-premium d-flex align-items-center justify-content-center" 
+                                style="padding: 0 16px; font-size: 13px; font-weight: 700; border-radius: 12px; height: 100%; white-space: nowrap; text-decoration: none;">
+                                Export
+                            </a>
+                            <form method="POST" action="{% url 'send_email' %}" class="d-inline h-100">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-premium h-100 d-flex align-items-center justify-content-center"
+                                    style="padding: 0 16px; font-size: 13px; font-weight: 700; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; white-space: nowrap;">
+                                    📧 Email
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </nav>
 
-            <div class="p-4">
-
-                {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 mb-3" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                {% endfor %}
-                {% endif %}
-
-                <div class="bg-white p-4 rounded-4 shadow-sm border mb-4"
-                    style="border-left: 5px solid #5166E2 !important;">
-                    <h6 class="fw-bold mb-3 d-flex align-items-center" style="color: #212880;">
-                        <span class="me-2">🚀</span> Scrape New Jobs
-                    </h6>
-                    <form method="POST" action="{% url 'dashboard' %}">
-                        {% csrf_token %}
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="small fw-bold text-muted mb-1">Job Title</label>
-                                <input type="text" name="job_title" class="form-control"
-                                    placeholder="e.g. Python Developer"
-                                    style="border-radius: 10px; height: 45px; font-size: 14px; background: #fcfdfe;"
-                                    required>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="small fw-bold text-muted mb-1">Location</label>
-                                <input type="text" name="location" class="form-control" placeholder="e.g. India"
-                                    style="border-radius: 10px; height: 45px; font-size: 14px; background: #fcfdfe;"
-                                    required>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="small fw-bold text-muted mb-1">Platform</label>
-                                <select name="platform" id="platformSelect" class="form-select"
-                                    style="border-radius: 10px; height: 45px; font-size: 14px; background: #fcfdfe;"
-                                    required>
-                                    <option value="">Select Platform</option>
-                                    <option value="linkedin">LinkedIn</option>
-                                    <option value="indeed">Indeed</option>
-                                    <option value="naukri">Naukri</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-2 d-flex align-items-end">
-                                <button type="submit" class="btn w-100 text-white fw-bold btn-scrape-animate"
-                                    style="background-color: #5166E2; border-radius: 10px; height: 45px; border: none; font-size: 14px; box-shadow: 0 4px 12px rgba(81,102,226,0.2);">
-                                    Scrape Jobs
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+            <div class="dashboard-content p-4">
+                <!-- Dashboard Header -->
+                <div class="mb-4">
+                    <h2 class="fw-bold">Executive Dashboard</h2>
+                    <p class="text-muted small">Real-time job market intelligence and AI-driven candidate matching.</p>
                 </div>
 
-                <div class="bg-white p-4 rounded-4 shadow-sm border mb-4"
-                    style="border-left: 5px solid #0f9f6e !important;">
-                    <h6 class="fw-bold mb-3 d-flex align-items-center" style="color: #0f9f6e;">
-                        <span class="me-2">📄</span> Resume Match — Find Your Best Jobs
-                    </h6>
-
-                    {% if resume_data %}
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <div class="d-flex flex-wrap gap-2 mb-2">
-                                <span class="badge bg-success px-3 py-2" style="font-size: 12px;">
-                                    ✅ Resume Active
-                                </span>
-                                <span class="badge bg-light text-dark border px-3 py-2" style="font-size: 12px;">
-                                    📍 {{ resume_data.location }}
-                                </span>
-                                <span class="badge bg-light text-dark border px-3 py-2" style="font-size: 12px;">
-                                    💼 {{ resume_data.experience }} Yrs Experience
-                                </span>
-                            </div>
-                            <div class="d-flex flex-wrap gap-1">
-                                {% for skill in resume_data.skills|slice:":8" %}
-                                <span class="badge px-2 py-1"
-                                    style="background-color: #eef2ff; color: #5166E2; font-size: 11px; border-radius: 6px;">
-                                    {{ skill }}
-                                </span>
-                                {% endfor %}
-                                {% if resume_data.skills|length > 8 %}
-                                <span class="badge px-2 py-1"
-                                    style="background-color: #f4f7fe; color: #64748b; font-size: 11px;">
-                                    +{{ resume_data.skills|length|add:"-8" }} more
-                                </span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                            <a href="{% url 'jobs:clear_resume' %}" class="btn btn-sm btn-outline-danger fw-bold px-3"
-                                style="border-radius: 8px; font-size: 13px;">
-                                ❌ Clear Resume
-                            </a>
-                        </div>
+                <!-- Stats Grid (Responsive 4-2-1) -->
+                <div class="dashboard-grid mb-5">
+                    <div class="glass-card">
+                        <span class="small text-muted text-uppercase fw-bold">Scraped Intelligence</span>
+                        <div class="h2 mt-2 mb-1" style="color: var(--accent);">{{ total_jobs|default:"0" }}</div>
+                        <div class="small text-success">Total Records Fetched</div>
                     </div>
-                    {% else %}
-                    <form method="POST" action="{% url 'jobs:upload_resume' %}" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="row g-3 align-items-end">
-                            <div class="col-md-6">
-                                <label class="small fw-bold text-muted mb-1">Upload Resume (PDF / DOCX)</label>
-                                <input type="file" name="resume" class="form-control" accept=".pdf,.docx,.doc"
-                                    style="border-radius: 10px; height: 45px; font-size: 14px; background: #fcfdfe;"
-                                    required>
-                            </div>
-                            <div class="col-md-3">
-                                <button type="submit" class="btn w-100 text-white fw-bold"
-                                    style="background-color: #0f9f6e; border-radius: 10px; height: 45px;
-                                               border: none; font-size: 14px; box-shadow: 0 4px 12px rgba(15,159,110,0.2);">
-                                    🚀 Match My Jobs
-                                </button>
-                            </div>
-                            <div class="col-md-3">
-                                <p class="text-muted small mb-0">
-                                    Upload your resume to get <strong>AI match scores</strong>
-                                    and ⭐ star ratings for each job.
-                                </p>
-                            </div>
-                        </div>
-                    </form>
-                    {% endif %}
+                    <div class="glass-card">
+                        <span class="small text-muted text-uppercase fw-bold">AI Match Score</span>
+                        <div class="h2 mt-2 mb-1">{{ avg_match|default:"0" }}%</div>
+                        <div class="small text-muted">Average Relevance</div>
+                    </div>
+                    <div class="glass-card">
+                        <span class="small text-muted text-uppercase fw-bold">Target Keyword</span>
+                        <div class="h2 mt-2 mb-1">{{ last_query|default:"N/A" }}</div>
+                        <div class="small text-muted">Primary Focus</div>
+                    </div>
+                    <div class="glass-card">
+                        <span class="small text-muted text-uppercase fw-bold">Live Platforms</span>
+                        <div class="h2 mt-2 mb-1">3</div>
+                        <div class="small text-info">LinkedIn, Indeed, Naukri</div>
+                    </div>
                 </div>
 
-                <div class="bg-white rounded-4 shadow-sm border overflow-hidden">
-                    <div class="p-3 bg-light border-bottom d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center gap-2">
-                            <h6 class="mb-0 fw-bold">Recent Scrapes</h6>
-                            <span class="badge px-3 py-2"
-                                style="font-size: 11px; background-color: #ff7e1b; color: white; border-radius: 999px;">
-                                Naukri
-                            </span>
-                        </div>
+                <div class="row g-4 mb-5">
+                    <!-- Scrape Section -->
+                    <div class="col-lg-8">
+                        <div class="glass-card p-4" style="height: 100%;">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h5 class="fw-bold mb-0">Intelligence Harvester</h5>
+                                <span class="badge"
+                                    style="background: rgba(124, 92, 252, 0.1); color: var(--accent2);">v2.4
+                                    Engine</span>
+                            </div>
 
-                        <div class="d-flex align-items-center gap-2">
-                            <select id="expFilter" class="form-select form-select-sm" style="width: 120px;">
-                                <option value="1">1 Year</option>
-                                <option value="2">2 Years</option>
-                                <option value="3">3 Years</option>
-                                <option value="4">4 Years</option>
-                                <option value="5">5+ Years</option>
-                            </select>
-
-                            <button onclick="filterByExperience()" class="btn btn-sm btn-primary fw-bold">
-                                Apply
-                            </button>
-
-                            <span class="badge rounded-pill bg-white text-dark border px-3 py-2 fw-semibold"
-                                style="font-size: 11px;">
-                                {{ jobs.count }} Jobs Scraped
-                            </span>
-                        </div>
-                    </div>
-
-                    {% if jobs %}
-                    <div class="table-responsive custom-scrollbar">
-                        <table class="table mb-0 align-middle" style="min-width: 1150px;">
-                            <thead style="background-color: #f8fafc;">
-                                <tr>
-                                    <th class="ps-4 py-3 text-muted small fw-bold">COMPANY</th>
-                                    <th class="py-3 text-muted small fw-bold">JOB TITLE</th>
-                                    <th class="py-3 text-muted small fw-bold">SALARY</th>
-                                    <th class="py-3 text-muted small fw-bold">MATCH</th>
-                                    <th class="py-3 text-muted small fw-bold">SKILLS</th>
-                                    <th class="py-3 text-muted small fw-bold">POSTED</th>
-                                    <th class="py-3 text-muted small fw-bold">DESCRIPTION</th>
-                                    <th class="py-3 text-muted small fw-bold text-end pe-4">ACTION</th>
-                                </tr>
-                            </thead>
-
-                            <tbody style="font-size: 13px;">
-                                {% for job in jobs %}
-                                <tr class="hover-row border-bottom job-row">
-
-                                    <td class="ps-4">
-                                        <div class="company-cell">
-                                            <div class="company-logo-box">
-                                                {{ job.company|default:"X"|slice:":2" }}
-                                            </div>
-                                            <div>
-                                                <div class="company-name">{{ job.company|default:"-" }}</div>
-                                                <p class="company-location mb-0">{{ job.location|default:"-" }}
-                                                    (<span class="job-exp">{{job.experience|default:"-" }}</span>) </p>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <div class="job-title-main">{{ job.title|default:"-" }}</div>
-                                        {% if job.job_type %}
-                                        {% with job.job_type|lower as type_text %}
-                                        {% if "full" in type_text %}
-                                        <span class="job-type-badge job-type-fulltime">{{ job.job_type }}</span>
-                                        {% elif "contract" in type_text %}
-                                        <span class="job-type-badge job-type-contract">{{ job.job_type }}</span>
-                                        {% else %}
-                                        <span class="job-type-badge job-type-default">{{ job.job_type }}</span>
-                                        {% endif %}
-                                        {% endwith %}
-                                        {% else %}
-                                        <span class="job-type-badge job-type-default">Not Available</span>
-                                        {% endif %}
-                                    </td>
-
-                                    <td class="text-success fw-bold">{{ job.salary|default:"-" }}</td>
-
-                                    <td>
-                                        {% if job.match_score > 0 %}
-                                        <div class="text-center">
-                                            {% if job.match_score >= 75 %}
-                                            <span class="badge fw-bold px-2 py-1"
-                                                style="font-size:12px; border-radius:8px; background-color:#e8fff3; color:#0f9f6e;">
-                                                {{ job.match_score }}%
-                                            </span>
-                                            {% elif job.match_score >= 50 %}
-                                            <span class="badge fw-bold px-2 py-1"
-                                                style="font-size:12px; border-radius:8px; background-color:#fff4df; color:#d48a00;">
-                                                {{ job.match_score }}%
-                                            </span>
-                                            {% else %}
-                                            <span class="badge fw-bold px-2 py-1"
-                                                style="font-size:12px; border-radius:8px; background-color:#f4f7fe; color:#64748b;">
-                                                {{ job.match_score }}%
-                                            </span>
-                                            {% endif %}
-                                            <div style="font-size:13px;">
-                                                {% for i in "12345" %}
-                                                {% if forloop.counter <= job.star_rating %} ⭐ {% else %} ☆ {% endif %}
-                                                    {% endfor %} </div>
-                                            </div>
-                                            {% else %}
-                                            <span class="text-muted small">—</span>
-                                            {% endif %}
-                                    </td>
-
-                                    <td>
-                                        {% if job.skills and job.skills != "Not Disclosed" %}
-                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
-                                            title="{{ job.skills }}">
-                                            View Skills
+                            <form id="scrapeForm" method="POST" action="{% url 'dashboard' %}">
+                                {% csrf_token %}
+                                <div class="row g-4">
+                                    <div class="col-md-5">
+                                        <label class="small fw-bold text-muted mb-2">Primary Keyword</label>
+                                        <input type="text" name="job_title" class="form-control search-box-wrapper p-3"
+                                            style="max-width: 100%; background: rgba(0,0,0,0.2);"
+                                            placeholder="e.g. Principal Software Engineer" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="small fw-bold text-muted mb-2">Location Focus</label>
+                                        <input type="text" name="location" class="form-control search-box-wrapper p-3"
+                                            style="max-width: 100%; background: rgba(0,0,0,0.2);"
+                                            placeholder="e.g. Remote / US" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="small fw-bold text-muted mb-2">Platform</label>
+                                        <select name="platform" class="form-select search-box-wrapper p-3"
+                                            style="max-width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border);"
+                                            required>
+                                            <option value="linkedin">LinkedIn</option>
+                                            <option value="indeed">Indeed </option>
+                                            <option value="naukri">Naukri </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" id="scrapeBtn" class="btn btn-premium w-100 py-3 mt-2">
+                                            Initialize Deep Scrape Sequence
                                         </button>
-                                        {% else %}
-                                        <span class="text-muted small">Not Disclosed</span>
-                                        {% endif %}
-                                    </td>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
-
-
-                                    <td>{{ job.posted_date|default:"-" }}</td>
-
-                                    <td>
-                                        {% if job.description %}
-                                        <button class="btn btn-sm btn-outline-dark" data-bs-toggle="tooltip"
-                                            title="{{ job.description }}">
-                                            View Description
-                                        </button>
-                                        {% else %}
-                                        <span class="text-muted small">Not Available</span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="pe-4 text-end">
-                                        <a href="{{ job.apply_link }}" target="_blank"
-                                            class="btn btn-dark py-1 px-3 fw-bold"
-                                            style="font-size: 11px; border-radius: 8px;">
-                                            Apply
-                                        </a>
-                                    </td>
-
-                                </tr>
+                    <!-- AI Profile Section -->
+                    <div class="col-lg-4">
+                        <div class="glass-card p-4" style="height: 100%; border-top: 4px solid #10b981 !important;">
+                            <h5 class="fw-bold mb-4">AI Candidate Profile</h5>
+                            {% if resume_data %}
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <div
+                                    style="width: 50px; height: 50px; background: rgba(16, 185, 129, 0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                                    👤</div>
+                                <div>
+                                    <div class="fw-bold">{{ resume_data.location }} Profile</div>
+                                    <div class="text-muted small">{{ resume_data.experience }} Years Experience</div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                {% for skill in resume_data.skills|slice:":6" %}
+                                <span class="badge"
+                                    style="background: rgba(124, 92, 252, 0.1); color: var(--accent2); border: 1px solid rgba(124, 92, 252, 0.15);">{{
+                                    skill }}</span>
                                 {% endfor %}
-                            </tbody>
-                        </table>
+                            </div>
+                            <a href="{% url 'jobs:clear_resume' %}" class="btn btn-outline-danger btn-sm w-100 border-0"
+                                style="background: rgba(239, 68, 68, 0.05);">Reset AI Context</a>
+                            {% else %}
+                            <p class="text-muted small mb-4">Upload your professional resume to prime the AI scoring
+                                engine.</p>
+                            <form method="POST" action="{% url 'jobs:upload_resume' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="file" name="resume" class="form-control mb-3"
+                                    style="background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white;"
+                                    required>
+                                <button type="submit" class="btn btn-success w-100 fw-bold"
+                                    style="background: #10b981; border: none; border-radius: 12px; padding: 12px;">Sync
+                                    Resume</button>
+                            </form>
+                            {% endif %}
+                        </div>
                     </div>
-
-                    <div class="d-flex justify-content-center align-items-center p-3">
-                        {% if jobs.has_previous %}
-                        <a href="?page={{ jobs.previous_page_number }}" class="btn btn-sm btn-outline-primary me-2">
-                            ⬅ Previous
-                        </a>
-                        {% endif %}
-                        <span class="fw-bold mx-2">
-                            Page {{ jobs.number }} of {{ jobs.paginator.num_pages }}
-                        </span>
-                        {% if jobs.has_next %}
-                        <a href="?page={{ jobs.next_page_number }}" class="btn btn-sm btn-outline-primary ms-2">
-                            Next ➡
-                        </a>
-                        {% endif %}
-                    </div>
-                    {% else %}
-                    <div class="text-center py-5 text-muted">
-                        <div style="font-size: 3rem;">📭</div>
-                        <p class="mt-3 fw-semibold">No jobs scraped yet.</p>
-                        <p class="small">Use the form above to scrape jobs.</p>
-                    </div>
-                    {% endif %}
                 </div>
 
+                <!-- Main Data Table Container -->
+                <div id="jobs-container" class="glass-card mb-5 p-0" style="overflow-x: auto; max-width: 100%;">
+                    <div style="min-width: 900px;">
+                        {% include 'partials/job_list_partial.html' %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    {% endblock %}
+</div>
 
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        sidebar.classList.toggle('mobile-active');
+        overlay.classList.toggle('active');
+    }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('main-content');
-            sidebar.classList.toggle('expanded');
-            mainContent.classList.toggle('sidebar-expanded');
+    function initializeTooltips() {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+    }
+
+    function setTheme(theme) {
+        document.body.classList.remove('theme-green', 'theme-gold', 'theme-light', 'theme-silver');
+        if (theme !== 'purple' && theme !== '') {
+            document.body.classList.add('theme-' + theme);
         }
+        localStorage.setItem('selected-theme', theme);
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-            popoverTriggerList.forEach(el => new bootstrap.Popover(el, { trigger: 'focus' }));
-
-            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-            tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+        // Update dots UI
+        document.querySelectorAll('.theme-dot').forEach(dot => {
+            dot.classList.remove('active');
+            dot.style.outline = 'none';
+            dot.style.boxShadow = 'none';
         });
+        
+        const activeDot = document.querySelector(`.theme-dot[data-theme="${theme}"]`);
+        if (activeDot) {
+            activeDot.classList.add('active');
+            activeDot.style.outline = '2px solid #fff';
+            activeDot.style.outlineOffset = '2px';
+            activeDot.style.transform = 'scale(1.2)';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Apply saved theme
+        const savedTheme = localStorage.getItem('selected-theme');
+        if (savedTheme) setTheme(savedTheme);
+
+        initializeTooltips();
+
+        // Auto-expand sidebar on hover if you want, or just leave it click-based
+        // const sidebar = document.getElementById('sidebar');
+        // sidebar.addEventListener('mouseenter', () => sidebar.classList.add('expanded'));
+        // sidebar.addEventListener('mouseleave', () => sidebar.classList.remove('expanded'));
 
         document.getElementById("searchInput").addEventListener("keyup", function () {
             let searchValue = this.value.toLowerCase();
             let rows = document.querySelectorAll(".job-row");
-
-            rows.forEach(function (row) {
-                let text = row.innerText.toLowerCase();
-                if (text.includes(searchValue)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
+            rows.forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(searchValue) ? "" : "none";
             });
         });
+    });
 
-        function filterByExperience() {
-            let selectedExp = parseInt(document.getElementById("expFilter").value);
-            let rows = document.querySelectorAll(".job-row");
+    function filterByExperience() {
+        let selectedExp = parseInt(document.getElementById("expFilter").value);
+        let rows = document.querySelectorAll(".job-row");
+        rows.forEach(row => {
+            let expElement = row.querySelector(".job-exp");
+            if (!expElement) return;
+            let numbers = expElement.innerText.match(/\d+/g);
+            let minExp = numbers ? parseInt(numbers[0]) : 0;
+            let maxExp = numbers && numbers[1] ? parseInt(numbers[1]) : minExp;
+            row.style.display = (isNaN(selectedExp) || (selectedExp >= minExp && selectedExp <= maxExp)) ? "" : "none";
+        });
+    }
 
-            rows.forEach(function (row) {
-                let expElement = row.querySelector(".job-exp");
-                if (!expElement) return;
+    const scrapeForm = document.getElementById('scrapeForm');
+    if (scrapeForm) {
+        scrapeForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('scrapeBtn');
+            const originalBtnContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Processing...`;
 
-                let expText = expElement.innerText.toLowerCase();
-                let numbers = expText.match(/\d+/g);
-
-                let minExp = 0;
-                let maxExp = 0;
-
-                if (numbers) {
-                    minExp = parseInt(numbers[0]);
-                    maxExp = numbers[1] ? parseInt(numbers[1]) : minExp;
-                }
-
-                if (isNaN(selectedExp)) {
-                    row.style.display = "";
-                } else {
-                    if (selectedExp >= minExp && selectedExp <= maxExp) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
-                }
-            });
-        }
-
-        // ===== SCRAPING LOADING ANIMATION =====
-        const scrapeForm = document.querySelector('form[action*="dashboard"]');
-        if (scrapeForm) {
-            scrapeForm.addEventListener('submit', function () {
-                const btn = this.querySelector('button[type="submit"]');
-                btn.disabled = true;
-                btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Scraping...`;
-
-                const overlay = document.createElement('div');
-                overlay.innerHTML = `
+            const overlay = document.createElement('div');
+            overlay.id = 'scraping-overlay';
+            overlay.innerHTML = `
             <div style="position:fixed;top:0;left:0;width:100%;height:100%;
-                background:rgba(33,40,128,0.88);z-index:9999;
+                background:rgba(4, 3, 12, 0.98);z-index:9999;backdrop-filter: blur(40px);
                 display:flex;flex-direction:column;align-items:center;justify-content:center;">
-                <div class="spinner-border text-white mb-4" style="width:65px;height:65px;border-width:5px;"></div>
-                <h4 class="text-white fw-bold mb-2">🔍 Scraping Jobs...</h4>
-                <p class="text-white-50 mb-4" id="loadingMsg" style="font-size:15px;">Connecting to platform...</p>
-                <div style="width:280px;height:6px;background:rgba(255,255,255,0.2);border-radius:10px;overflow:hidden;">
-                    <div id="progressBar" style="height:100%;width:0%;background:#6ee7b7;border-radius:10px;transition:width 0.5s;"></div>
+                <div style="position:relative;">
+                    <div class="spinner-grow" style="width: 5rem; height: 5rem; color: var(--accent); opacity: 0.5;" role="status"></div>
+                    <div class="spinner-grow" style="width: 3rem; height: 3rem; color: var(--accent2); position:absolute; top:1rem; left:1rem;" role="status"></div>
                 </div>
+                <h3 class="fw-bold mt-5 mb-2 text-white" style="letter-spacing:-1px;">Deep Scrape in Progress</h3>
+                <p class="text-white fw-bold mb-4" id="loadingMsg" style="font-size:18px; letter-spacing: 0.5px;">Initializing neural scrapers...</p>
+                <div style="width:400px;height:4px;background:rgba(255,255,255,0.05);border-radius:10px;overflow:hidden;">
+                    <div id="progressBar" style="height:100%;width:0%;background:linear-gradient(90deg, var(--accent), var(--accent2));border-radius:10px;transition:width 0.4s;"></div>
+                </div>
+                <p class="mt-4 small text-muted">Leveraging AI to bypass platform restrictions and extract high-value leads.</p>
             </div>`;
-                document.body.appendChild(overlay);
+            document.body.appendChild(overlay);
 
-                const msgs = [
-                    ['Connecting to platform...', 10],
-                    ['Searching for jobs...', 25],
-                    ['Extracting job details...', 50],
-                    ['Filtering results...', 75],
-                    ['Almost done, hang tight! 🚀', 90],
-                ];
-                let i = 0;
-                const interval = setInterval(() => {
-                    if (i < msgs.length) {
-                        document.getElementById('loadingMsg').textContent = msgs[i][0];
-                        document.getElementById('progressBar').style.width = msgs[i][1] + '%';
-                        i++;
-                    } else {
-                        clearInterval(interval);
+            const msgs = [
+                "Opening secure browser session...",
+                "Preparing search parameters...",
+                "Bypassing platform bot detection...",
+                "Finding relevant opportunities...",
+                "Extracting job metadata...",
+                "Collecting salary and skill details...",
+                "Organizing results for AI analysis...",
+                "Running match scoring engine...",
+                "Almost done, finalizing report..."
+            ];
+            let msgIdx = 0;
+            const msgInterval = setInterval(() => {
+                const msgEl = document.getElementById('loadingMsg');
+                if (msgEl) {
+                    msgEl.textContent = msgs[msgIdx % msgs.length];
+                    msgIdx++;
+                }
+            }, 3000);
+
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                const bar = document.getElementById('progressBar');
+                if (bar && progress < 95) {
+                    progress += Math.random() * 2;
+                    if (progress > 95) progress = 95;
+                    bar.style.width = progress + '%';
+                }
+            }, 800);
+
+            const formData = new FormData(this);
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': formData.get('csrfmiddlewaretoken') }
+            })
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('jobs-container').innerHTML = html;
+                    initializeTooltips();
+                    clearInterval(msgInterval);
+                    clearInterval(progressInterval);
+                    setTimeout(() => { overlay.remove(); btn.disabled = false; btn.innerHTML = originalBtnContent; }, 500);
+                })
+                .catch(() => {
+                    clearInterval(msgInterval);
+                    clearInterval(progressInterval);
+                    const msgEl = document.getElementById('loadingMsg');
+                    const bar = document.getElementById('progressBar');
+                    if (msgEl) {
+                        msgEl.textContent = "Extraction failed. Unexpected platform response.";
+                        msgEl.style.color = "#ef4444";
                     }
-                }, 2500);
-            });
-        }
-
-        
-
-        // ===== RESUME MATCH LOADING =====
-        const resumeForm = document.querySelector('form[action*="upload-resume"]');
-        if (resumeForm) {
-            resumeForm.addEventListener('submit', function () {
-                const btn = this.querySelector('button[type="submit"]');
-                btn.disabled = true;
-                btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Analyzing Resume...`;
-            });
-        }
-
-
-    </script>
-
-
-</body>
-
-</html> 
+                    if (bar) bar.style.background = "#ef4444";
+                    setTimeout(() => { overlay.remove(); btn.disabled = false; btn.innerHTML = originalBtnContent; }, 3000);
+                });
+        });
+    }
+</script>
+{% endblock %}

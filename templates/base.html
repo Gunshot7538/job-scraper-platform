@@ -59,21 +59,31 @@
     <body>
 
         <!-- NAVBAR -->
+        {% block navbar %}
         <div class="top-bar">
-            <h4 style="margin:0;">🚀 Smart Job Manager</h4>
+            <h4 style="margin:0; font-weight: 800; letter-spacing: -0.5px;">🚀 Smart Job Manager</h4>
 
-            <div>
+            <div style="display: flex; align-items: center; gap: 20px;">
                 <a href="{% url 'home' %}">🏠 Home</a>
-                <a href="{% url 'dashboard' %}">📊 Dashboard</a>
+                {% if user.is_authenticated %}
+                    <!-- <a href="{% url 'dashboard' %}">📊 Dashboard</a> -->
+                    <!-- <a href="{% url 'logout' %}" style="background: rgba(239, 68, 68, 0.2); padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5;">🚪 Logout</a> -->
+                {% else %}
+                    <a href="{% url 'login' %}">🔑 Login</a>
+                    <a href="{% url 'signup' %}" style="background: #6366f1; padding: 6px 14px; border-radius: 8px; font-weight: 600;">✨ Signup</a>
+                {% endif %}
             </div>
         </div>
+        {% endblock %}
 
         <!-- MESSAGES -->
+        {% block messages %}
         {% if messages %}
             {% for message in messages %}
                 <div class="msg">{{ message }}</div>
             {% endfor %}
         {% endif %}
+        {% endblock %}
 
         <!-- MAIN CONTENT -->
         {% block content %}{% endblock %}

@@ -48,7 +48,7 @@ def dashboard_view(request):
                 if not scraped_jobs:
                     messages.warning(request, "No jobs found or scraping failed.")
                 else:
-                    scraped_jobs = scraped_jobs[:60]
+                    scraped_jobs = scraped_jobs[:100]
                     count = 0
                     for item in scraped_jobs:
                         if not Job.objects.filter(user=request.user, apply_link=item.get('apply_link')).exists():
@@ -153,16 +153,35 @@ def dashboard_view(request):
     if resume_skills:
         jobs_with_score.sort(key=lambda x: x['match_score'], reverse=True)
 
+    # ================= STATS =================
+    total_jobs_count = len(jobs_with_score)
+    avg_match = 0
+    if total_jobs_count > 0:
+        avg_match = round(sum(j['match_score'] for j in jobs_with_score) / total_jobs_count, 1)
+    
+    platforms = {}
+    for j in jobs_with_score:
+        p = j['platform'].capitalize()
+        platforms[p] = platforms.get(p, 0) + 1
+
     # ================= PAGINATION =================
     paginator   = Paginator(jobs_with_score, 20)
     page_number = request.GET.get('page')
     page_obj    = paginator.get_page(page_number)
 
-    return render(request, 'dashboard.html', {
-        'jobs'       : page_obj,
-        'resume_data': resume_data,
-        'total_jobs' : len(jobs_with_score),
-    })
+    context = {
+        'jobs'           : page_obj,
+        'resume_data'    : resume_data,
+        'total_jobs'     : total_jobs_count,
+        'avg_match'      : avg_match,
+        'platform_stats' : platforms,
+        'active_platform': platform_filter or (jobs_with_score[0]['platform'] if jobs_with_score else 'Global'),
+    }
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return render(request, 'partials/job_list_partial.html', context)
+
+    return render(request, 'dashboard.html', context)
 
 
 # ================= CSV DOWNLOAD =================

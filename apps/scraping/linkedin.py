@@ -42,7 +42,7 @@ def scrape_linkedin_jobs(job_title, location):
                     # 🔥 SCROLL TO LOAD MORE JOBS
             last_height = driver.execute_script("return document.body.scrollHeight")
 
-            for i in range(5):   # 5 scroll = approx 40–60 jobs
+            for i in range(8):   # Increase scrolls to get approx 80–100 jobs
                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 time.sleep(random.uniform(2, 3))
 
@@ -60,7 +60,7 @@ def scrape_linkedin_jobs(job_title, location):
         print(f"Total jobs found: {len(job_cards)}")
 
         for card in job_cards:
-            if len(jobs) >= 60:
+            if len(jobs) >= 100:
                 break
             try:
                 title = ""

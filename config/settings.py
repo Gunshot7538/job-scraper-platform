@@ -30,7 +30,14 @@ SECRET_KEY = 'django-insecure-^#5jpyy8!dg#obe=1ybynaq3d8*9e8zd(-d1l7@%z-)5gdwtv+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.0.109', '127.0.0.1', 'localhost']
+
+# CSRF Trusted Origins for local network access 
+CSRF_TRUSTED_ORIGINS = [
+    'http://192.168.0.109:8000',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000'
+]
 
 
 # Application definition
@@ -125,10 +132,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'home'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FORM_EMAIL  = 'admin@example.com'

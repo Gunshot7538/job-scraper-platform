@@ -1,0 +1,188 @@
+{% load static %}
+
+{% if messages %}
+<div id="ajax-messages" class="px-3 pt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show glass-card mb-0" role="alert"
+        style="background: rgba(124, 92, 252, 0.1) !important; color: var(--accent); border-radius: 16px !important;">
+        {{ message }}
+        <button type="button" class="btn-close" style="filter: invert(var(--theme-invert, 0));"
+            data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="job-list-header p-3 p-md-4 d-flex flex-wrap justify-content-between align-items-center gap-3"
+    style="background: rgba(255,255,255,0.01); border-bottom: 1px solid var(--border);">
+    <div>
+        <div class="d-flex align-items-center gap-3">
+            <h5 class="fw-bold mb-0" style="color: var(--t1);">Recent Intelligence</h5>
+            {% if active_platform %}
+            <span class="badge d-none d-sm-inline-block" style="
+                    background: {% if 'linkedin' in active_platform|lower %}rgba(10, 102, 194, 0.1){% elif 'indeed' in active_platform|lower %}rgba(33, 100, 243, 0.1){% elif 'naukri' in active_platform|lower %}rgba(255, 117, 18, 0.1){% else %}rgba(124, 92, 252, 0.1){% endif %};
+                    color: {% if 'linkedin' in active_platform|lower %}#0a66c2{% elif 'indeed' in active_platform|lower %}#2164f3{% elif 'naukri' in active_platform|lower %}#ff7512{% else %}var(--accent){% endif %};
+                    border: 1px solid {% if 'linkedin' in active_platform|lower %}rgba(10, 102, 194, 0.2){% elif 'indeed' in active_platform|lower %}rgba(33, 100, 243, 0.2){% elif 'naukri' in active_platform|lower %}rgba(255, 117, 18, 0.2){% else %}var(--border){% endif %};
+                    padding: 6px 14px;
+                    border-radius: 8px;
+                    font-size: 11px;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                ">
+                {{ active_platform|title }} Feed
+            </span>
+            {% endif %}
+        </div>
+        <p class="text-muted small mb-0 mt-1">Live feed of extracted opportunities</p>
+    </div>
+
+    <div class="d-flex align-items-center gap-2 gap-md-3">
+        <div class="d-flex align-items-center gap-2 p-1 px-2 px-md-3"
+            style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px;">
+            <span class="text-muted small fw-bold d-none d-sm-inline">Filter Exp:</span>
+            <select id="expFilter" class="bg-transparent border-0 small outline-none"
+                style="cursor: pointer; outline: none; color: var(--t1); font-size: 12px;">
+                <option value="1" style="background: var(--bg);">1Y</option>
+                <option value="2" style="background: var(--bg);">2Y</option>
+                <option value="3" style="background: var(--bg);">3Y</option>
+                <option value="4" style="background: var(--bg);">4Y</option>
+                <option value="5" style="background: var(--bg);">5Y+</option>
+            </select>
+            <button onclick="filterByExperience()" class="btn btn-link p-0 ms-1 ms-md-2 fw-bold text-decoration-none"
+                style="color: var(--accent); font-size: 11px;">Apply</button>
+        </div>
+
+        <span class="badge"
+            style="background: var(--accent); color: white; padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 11px;">
+            {{ total_jobs }} Jobs
+        </span>
+    </div>
+</div>
+
+{% if jobs %}
+<div class="table-responsive custom-scrollbar bg-transparent">
+    <style>
+        .job-row:not(:last-child) td {
+            border-bottom: 1px solid var(--border) !important;
+        }
+    </style>
+    <table class="table table-borderless mb-0 align-middle"
+        style="min-width: 900px; border-collapse: separate; border-spacing: 0; background: transparent !important; color: var(--t1);">
+        <thead style="background: rgba(255, 255, 255, 0.05);">
+            <tr>
+                <th class="ps-4 py-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">COMPANY</th>
+                <th class="py-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">ROLE</th>
+                <th class="py-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">SALARY</th>
+                <th class="py-4 text-center" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">AI SCORE</th>
+                <th class="py-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">SKILLS</th>
+                <th class="py-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">LISTED ON</th>
+                <th class="py-4 text-end pe-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">ACTION</th>
+            </tr>
+        </thead>
+
+        <tbody style="font-size: 14px; background: transparent !important;">
+            {% for job in jobs %}
+            <tr class="job-row"
+                style="transition: all 0.2s ease; background: transparent !important;">
+                <td class="ps-4 py-4" style="background: transparent !important;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div
+                            style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, var(--accent), var(--accent2)); opacity: 0.9; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #fff; font-size: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            {{ job.company|default:"X"|slice:":2"|upper }}
+                        </div>
+                        <div>
+                            <div class="fw-bold"
+                                style="color: var(--t1); font-size: 17px; letter-spacing: -0.5px; text-transform: capitalize;">
+                                {{ job.company|default:"Unknown Corp" }}</div>
+                            <div class="text-muted small d-flex align-items-center gap-1 mt-1">
+                                📍 {{ job.location|default:"Global" }}
+                                <span class="mx-1" style="opacity: 0.3;">•</span>
+                                <span class="job-exp badge"
+                                    style="background: rgba(124, 92, 252, 0.05); color: var(--t2); font-weight: 500;">{{ job.experience|default:"Any" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+
+                <td class="py-4">
+                    <div class="fw-bold" style="color: var(--t1); font-size: 15px;">{{ job.title|default:"Job Opportunity" }}</div>
+                </td>
+
+                <td class="py-4">
+                    <div class="fw-bold text-success" style="font-size: 15px;">{{ job.salary|default:"Market Rate" }}
+                    </div>
+                </td>
+
+                <td class="py-4 text-center">
+                    {% if job.match_score > 0 %}
+                    <div class="d-inline-block px-3 py-2"
+                        style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 14px;">
+                        <span class="fw-bold" style="color: #10b981; font-size: 14px;">{{ job.match_score }}%</span>
+                    </div>
+                    {% else %}
+                    <span class="text-muted opacity-50" style="font-size: 18px;">—</span>
+                    {% endif %}
+                </td>
+
+                <td class="py-4">
+                    {% if job.skills and job.skills != "Not Disclosed" %}
+                    <button class="badge border-0 py-2 px-3"
+                        style="background: var(--accentglow); color: var(--accent); border: 1px solid var(--border) !important; font-size: 11px; font-weight: 700; cursor: help;"
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="{{ job.skills }}">
+                        View Skills
+                    </button>
+                    {% else %}
+                    <span class="text-muted small">Not Disclosed</span>
+                    {% endif %}
+                </td>
+
+                <td class="py-4">
+                    <div style="color: var(--t2); font-size: 13px; font-weight: 500;">{{ job.posted_date|default:"Recent" }}</div>
+                </td>
+
+                <td class="pe-4 py-4 text-end">
+                    <div class="d-flex justify-content-end gap-2">
+                        <button class="btn btn-sm"
+                            style="background: rgba(255,255,255,0.06); color: var(--t1); border: 1px solid var(--border); border-radius: 12px; font-weight: 600; padding: 8px 14px;"
+                            data-bs-toggle="tooltip" title="{{ job.description }}">
+                            Details
+                        </button>
+                        <a href="{{ job.apply_link }}" target="_blank" class="btn btn-sm btn-premium"
+                            style="padding: 8px 20px; font-size: 13px;">
+                            Apply
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="p-3 p-md-4 d-flex justify-content-center align-items-center"
+    style="background: rgba(255,255,255,0.01); border-top: 1px solid var(--border);">
+    <div class="d-flex gap-2 align-items-center">
+        {% if jobs.has_previous %}
+        <a href="?page={{ jobs.previous_page_number }}" class="btn btn-sm px-3"
+            style="background: rgba(255,255,255,0.05); color: var(--t1); border-radius: 10px; border: 1px solid var(--border);">Previous</a>
+        {% endif %}
+
+        <div class="px-3 py-1"
+            style="background: var(--accentglow); border-radius: 10px; color: var(--accent); font-weight: 700; font-size: 13px;">
+            Page {{ jobs.number }} / {{ jobs.paginator.num_pages }}
+        </div>
+
+        {% if jobs.has_next %}
+        <a href="?page={{ jobs.next_page_number }}" class="btn btn-sm px-3"
+            style="background: rgba(255,255,255,0.05); color: var(--t1); border-radius: 10px; border: 1px solid var(--border);">Next</a>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<div class="text-center py-5">
+    <div style="font-size: 4rem; opacity: 0.2;">📡</div>
+    <h5 class="fw-bold mt-4" style="color: var(--t1);">No Data Found</h5>
+    <p class="text-muted">Initialize the Intelligence Harvester to begin data extraction.</p>
+</div>
+{% endif %}

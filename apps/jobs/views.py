@@ -53,7 +53,7 @@ def upload_resume(request):
             
             if not resume_text:
                 messages.error(request, 'Could not extract text from resume.')
-                return redirect('jobs:job_list')
+                return redirect('dashboard')
             
             # Extract info from resume
             resume_data = {
@@ -98,9 +98,9 @@ def upload_resume(request):
         except Exception as e:
             messages.error(request, f'Error processing resume: {str(e)}')
         
-        return redirect('jobs:job_list')
+        return redirect('dashboard')
     
-    return redirect('jobs:job_list')
+    return redirect('dashboard')
 
 def clear_resume(request):
     if 'resume_data' in request.session:

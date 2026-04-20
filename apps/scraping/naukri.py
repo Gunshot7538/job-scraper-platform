@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import time
 
 
-def scrape_naukri_jobs(job_title, location, pages=3):
+def scrape_naukri_jobs(job_title, location, pages=5):
 
     options = uc.ChromeOptions()
     options.add_argument("--disable-blink-features=AutomationControlled")
