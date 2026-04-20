@@ -65,7 +65,7 @@
         margin: 0;
         padding: 0;
         overflow-x: hidden;
-        width: 100vw;
+        width: 100%;
         -webkit-font-smoothing: antialiased;
     }
 
@@ -136,7 +136,6 @@
             padding: 0 15px !important;
             height: auto !important;
             min-height: 64px;
-            overflow: hidden;
         }
         .dashboard-content {
             padding: 1rem !important;
@@ -490,52 +489,56 @@
 
         <!-- Main Content -->
         <div id="main-content">
-            <nav class="navbar custom-navbar">
-    <div class="container-fluid d-flex align-items-center justify-content-between flex-nowrap">
+            <nav class="navbar custom-navbar px-3 px-md-4">
+                <div class="container-fluid d-flex align-items-center justify-content-between p-0 flex-nowrap" style="overflow: visible;">
+                    
+                    <!-- Left: Hamburger & Search -->
+                    <div class="d-flex align-items-center gap-2 gap-md-3">
+                        <button onclick="toggleSidebar()" class="btn border-0 d-flex align-items-center justify-content-center flex-shrink-0"
+                            style="border-radius: 12px; background: rgba(255,255,255,0.08); width: 44px; height: 44px; color: var(--t1);">
+                            ☰
+                        </button>
+                        
+                        <div class="search-box-wrapper d-none d-sm-flex align-items-center" style="max-width: 250px;">
+                            <span class="text-muted me-2">🔍</span>
+                            <input type="text" id="searchInput" placeholder="Search..." style="width: 100%;">
+                        </div>
+                    </div>
 
-        <div class="d-flex align-items-center gap-3 flex-shrink-0">
-            <button onclick="toggleSidebar()" 
-                class="btn border-0 d-flex align-items-center justify-content-center"
-                style="border-radius: 12px; background: rgba(255,255,255,0.08); width: 44px; height: 44px;">
-                ☰
-            </button>
+                    <!-- Right: Controls -->
+                    <div class="d-flex align-items-center gap-2 gap-md-3">
+                        
+                        <!-- Theme Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn border-0 d-flex align-items-center justify-content-center" type="button" id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                style="border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); height: 40px; padding: 0 12px; color: var(--t1);">
+                                <span class="d-none d-md-inline small me-2">Theme</span>🎨
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="themeDropdown" style="background: var(--card); border: 1px solid var(--border); backdrop-filter: blur(12px); border-radius: 12px; min-width: 120px;">
+                                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#" onclick="setTheme('purple'); event.preventDefault();" style="color: var(--t1);"><div style="width:14px;height:14px;border-radius:50%;background:#7c5cfc;"></div> Purple</a></li>
+                                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#" onclick="setTheme('green'); event.preventDefault();" style="color: var(--t1);"><div style="width:14px;height:14px;border-radius:50%;background:#10b981;"></div> Green</a></li>
+                                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#" onclick="setTheme('gold'); event.preventDefault();" style="color: var(--t1);"><div style="width:14px;height:14px;border-radius:50%;background:#f59e0b;"></div> Gold</a></li>
+                                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#" onclick="setTheme('light'); event.preventDefault();" style="color: var(--t1);"><div style="width:14px;height:14px;border-radius:50%;background:#fff;border:1px solid #ccc;"></div> Light</a></li>
+                            </ul>
+                        </div>
 
-            <div class="search-box-wrapper d-flex align-items-center">
-                <span class="text-muted me-2">🔍</span>
-                <input type="text" id="searchInput" placeholder="Search insights...">
-            </div>
-        </div>
+                        <!-- Actions -->
+                        <a href="{% url 'download_csv' %}" class="btn-premium d-flex align-items-center justify-content-center"
+                            style="padding: 0 12px; font-size: 13px; border-radius: 10px; height: 40px; text-decoration: none;">
+                            <span class="d-none d-sm-inline">Export</span><span class="d-sm-none">📥</span>
+                        </a>
 
-        <div class="d-flex align-items-center gap-3 flex-shrink-0">
+                        <form method="POST" action="{% url 'send_email' %}" class="m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-premium d-flex align-items-center justify-content-center"
+                                style="padding: 0 12px; font-size: 13px; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; height: 40px;">
+                                <span class="d-none d-sm-inline">📧 Email</span><span class="d-sm-none">📧</span>
+                            </button>
+                        </form>
 
-            <div class="d-flex align-items-center gap-2 px-2"
-                style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; height: 40px;">
-                
-                <span class="text-muted small d-none d-md-inline">Theme</span>
-
-                <div class="theme-dot" onclick="setTheme('purple')" style="width:14px;height:14px;border-radius:50%;background:#7c5cfc;"></div>
-                <div class="theme-dot" onclick="setTheme('green')" style="width:14px;height:14px;border-radius:50%;background:#10b981;"></div>
-                <div class="theme-dot" onclick="setTheme('gold')" style="width:14px;height:14px;border-radius:50%;background:#f59e0b;"></div>
-                <div class="theme-dot" onclick="setTheme('light')" style="width:14px;height:14px;border-radius:50%;background:#fff;border:1px solid #ccc;"></div>
-            </div>
-
-            <a href="{% url 'download_csv' %}" class="btn-premium"
-                style="padding: 8px 14px; font-size: 13px; border-radius: 10px;">
-                Export
-            </a>
-
-            <form method="POST" action="{% url 'send_email' %}">
-                {% csrf_token %}
-                <button type="submit"
-                    class="btn-premium"
-                    style="padding: 8px 14px; font-size: 13px; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px;">
-                    📧 Email
-                </button>
-            </form>
-
-        </div>
-    </div>
-</nav>
+                    </div>
+                </div>
+            </nav>
 
             <div class="dashboard-content p-4">
                 <!-- Dashboard Header -->
