@@ -39,7 +39,7 @@ def scrape_linkedin_jobs(job_title, location):
             except:
                 pass
 
-                    # 🔥 SCROLL TO LOAD MORE JOBS
+            # Scroll to load more jobs
             last_height = driver.execute_script("return document.body.scrollHeight")
 
             for i in range(8):   # Increase scrolls to get approx 80–100 jobs
@@ -95,7 +95,7 @@ def scrape_linkedin_jobs(job_title, location):
                 if match:
                     job_id = match.group(1)
 
-                # 🔥 clean valid URL
+                # Construct clean job URL
                 if job_id:
                     apply_link = f"https://www.linkedin.com/jobs/view/{job_id}/"
 
@@ -133,7 +133,7 @@ def scrape_linkedin_jobs(job_title, location):
                 else:
                     description = job_soup.get_text(" ", strip=True)[:1500]
 
-                # CRITERIA
+                # Extract job criteria
                 criteria = job_soup.find_all("li", class_="description__job-criteria-item")
 
                 seniority = ""
@@ -158,7 +158,7 @@ def scrape_linkedin_jobs(job_title, location):
                         elif "Industries" in label_text:
                             industry = value_text
 
-                # EXPERIENCE
+                # Extract experience level
                 if seniority:
                     experience = seniority
                 else:
@@ -170,7 +170,7 @@ def scrape_linkedin_jobs(job_title, location):
                     if exp_match:
                         experience = exp_match.group(0)
 
-                # JOB TYPE
+                # Determine employment type
                 if employment:
                     emp_lower = employment.lower()
                     if "full" in emp_lower:
@@ -204,10 +204,10 @@ def scrape_linkedin_jobs(job_title, location):
                 skills_found = []
 
                 skill_db = [
-                    # Programming
+                    # Programming languages
                     "python","java","c++","c#",".net","golang","rust","php","ruby",
 
-                    # Web
+                    # Web development
                     "html","css","javascript","react","angular","vue","next.js","node.js",
 
                     # Backend
@@ -234,18 +234,18 @@ def scrape_linkedin_jobs(job_title, location):
                 if description:
                     desc_lower = description.lower()
 
-                    # 🔥 match from DB
+                    # Filter from predefined skill list
                     for skill in skill_db:
                         if skill in desc_lower:
                             skills_found.append(skill.upper())
 
-                    # 🔥 extra patterns (API, services etc.)
+                    # Extract API and service patterns
                     extra_patterns = re.findall(r'\b[A-Za-z]{3,}\s?(?:API|apis|services|tools)\b', description)
 
                     for p in extra_patterns:
                         skills_found.append(p.strip())
 
-                    # 🔥 clean result
+                    # Limit results
                     skills_found = list(set(skills_found))[:10]
 
                     if skills_found:
@@ -255,7 +255,7 @@ def scrape_linkedin_jobs(job_title, location):
                 else:
                     skills = "Not Disclosed"
 
-                # SALARY
+                # Salary extraction
                 salary_match = re.search(
                     r'(\$[\d,]+(?:\s*-\s*\$[\d,]+)?|\₹[\d,]+(?:\s*-\s*\₹[\d,]+)?|[\d,]+\s*(?:a year|a month|an hour))',
                     page_text,

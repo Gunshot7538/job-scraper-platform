@@ -73,8 +73,8 @@
                     <h6 class="card-title">{{ job.title }}</h6>
                     <p class="card-text mb-1">
                         🏢 {{ job.company }}<br>
-                        📍 {{ job.location }}<br>
-                        💰 {{ job.salary|default:"Not specified" }}<br>
+                        📍 {{ job.location|default:"Global" }}<br>
+                        💰 {{ job.salary|default:"Not Disclosed" }}<br>
                         💼 {{ job.experience|default:"Any" }}
                     </p>
 

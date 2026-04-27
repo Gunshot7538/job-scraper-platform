@@ -53,3 +53,25 @@ class Job(models.Model):
         verbose_name = 'Job'
         verbose_name_plural = 'Jobs'
 
+
+class SupportQuery(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('reviewed', 'Reviewed'),
+        ('resolved', 'Resolved'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='support_queries')
+    message = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Query by {self.user.username} — {self.status} ({self.created_at:%Y-%m-%d %H:%M})"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Support Query'
+        verbose_name_plural = 'Support Queries'
+

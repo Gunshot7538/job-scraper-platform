@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Smart Job Manager — AI-Powered Job Search</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     @import url('https://api.fontshare.com/v2/css?f[]=nexa@900,700,400,100&display=swap');
   </style>
@@ -35,6 +36,12 @@
       --max: 1140px;
     }
 
+    .orange-theme {
+      --accent: #ff6a00;
+      --accent2: #ff8c3a;
+      --accent3: #ffb380;
+    }
+
     html {
       scroll-behavior: smooth;
     }
@@ -46,6 +53,7 @@
       overflow-x: hidden;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      padding-top: calc(68px + env(safe-area-inset-top));
     }
 
     /* ── Fluid Typography ── */
@@ -82,13 +90,14 @@
       top: 0;
       left: 0;
       right: 0;
-      z-index: 999;
-      height: 68px;
+      z-index: 9999;
+      min-height: 68px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 48px;
-      background: rgba(4, 3, 12, 0.85);
+      padding: max(12px, env(safe-area-inset-top)) 48px 12px;
+      background: rgba(4, 3, 12, 0.88);
+      -webkit-backdrop-filter: blur(24px);
       backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
     }
@@ -122,7 +131,8 @@
     .nav-right {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
+      margin-left: auto;
     }
 
     .nav-link {
@@ -166,34 +176,133 @@
     }
 
     @media (max-width: 960px) {
-      nav { padding: 0 24px; }
+      nav {
+        padding: max(12px, env(safe-area-inset-top)) 18px 12px;
+        min-height: 64px;
+      }
+
+      .nav-brand {
+        min-width: 0;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .nav-sitename {
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .nav-toggle {
+        display: block;
+        font-size: 24px;
+        line-height: 1;
+        padding: 6px 8px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+      }
+
       .nav-right {
         position: fixed;
-        top: 68px;
-        left: 0;
-        right: 0;
-        background: rgba(4, 3, 12, 0.95);
+        top: calc(64px + env(safe-area-inset-top));
+        left: 12px;
+        right: 12px;
+        background: rgba(4, 3, 12, 0.98);
+        -webkit-backdrop-filter: blur(20px);
         backdrop-filter: blur(20px);
         flex-direction: column;
-        padding: 40px 24px;
-        gap: 20px;
-        border-bottom: 1px solid var(--border);
-        transform: translateY(-120%);
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        align-items: stretch;
+        padding: 18px;
+        gap: 12px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        transform: translateY(-140%);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.35s ease, opacity 0.35s ease;
+        max-height: calc(100vh - 100px - env(safe-area-inset-top));
+        overflow-y: auto;
       }
-      .nav-right.active { transform: translateY(0); }
-      .nav-toggle { display: block; }
-      .nav-link { width: 100%; text-align: center; font-size: 16px; }
+
+      .nav-right.active {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+ 
+      .theme-menu-wrap {
+        margin-left: 0;
+        width: 100%;
+      }
+ 
+      .theme-trigger {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        color: var(--t1);
+      }
+ 
+      .theme-dropdown {
+        position: static;
+        width: 100%;
+        margin-top: 8px;
+        background: rgba(255, 255, 255, 0.03);
+        box-shadow: none;
+        justify-content: center;
+        border-radius: 12px;
+      }
+ 
+      .theme-dropdown.show {
+        display: flex;
+      }
+ 
+      body.light-theme .theme-trigger {
+        background: rgba(0, 0, 0, 0.03);
+        border-color: rgba(0, 0, 0, 0.1);
+      }
+ 
+      body.light-theme .theme-dropdown {
+        background: rgba(0, 0, 0, 0.02);
+      }
+
+      .nav-link,
+      .nav-btn {
+        width: 100%;
+        text-align: center;
+        font-size: 15px;
+        padding: 12px 14px;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 48px 24px 60px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-primary,
+      .btn-outline {
+        width: 100%;
+        justify-content: center;
+      }
     }
 
     /* ── HERO ── */
     .hero {
-      min-height: 100vh;
+      min-height: calc(100vh - 68px - env(safe-area-inset-top));
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 100px 48px 80px;
+      padding: 60px 48px 80px;
       position: relative;
       overflow: hidden;
     }
@@ -501,13 +610,19 @@
       width: 46px;
       height: 46px;
       border-radius: 13px;
-      background: rgba(124, 92, 252, 0.1);
+      background: rgba(124, 92, 252, 0.08);
       border: 1px solid rgba(124, 92, 252, 0.2);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
       margin-bottom: 18px;
+    }
+
+    .feat-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2;
+      color: #a78bfa;
     }
 
     .feat-title {
@@ -658,9 +773,33 @@
     }
 
     .plat-icon {
-      font-size: 32px;
-      display: block;
-      margin-bottom: 16px;
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-family: 'Nexa', sans-serif;
+      line-height: 1;
+    }
+
+    .plat-linkedin {
+      background: #0077b5;
+      color: white;
+      font-size: 34px;
+    }
+
+    .plat-naukri {
+      background: #ff6a00;
+      color: white;
+      font-size: 34px;
+    }
+
+    .plat-indeed {
+      background: #2557a7;
+      color: white;
+      font-size: 34px;
     }
 
     .plat-name {
@@ -709,15 +848,23 @@
     }
 
     .sp-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  color: white;
+}
+
+.sp-icon i,
+.sp-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.2;
+}
 
     .icon-amber {
       background: rgba(245, 158, 11, 0.12);
@@ -1089,6 +1236,60 @@
       margin-right: 3px;
     }
 
+    .theme-dot.light {
+      background: #ffffff;
+      border: 2px solid #ccc;
+    }
+
+    /* LIGHT THEME */
+    .light-theme {
+      --bg: #ffffff;
+      --bg2: #f7f7fc;
+      --bg3: #ffffff;
+
+      --t1: #16142a;
+      --t2: #6f6a8f;
+      --t3: #b7b1d1;
+
+      --card: #ffffff;
+      --cardhover: rgba(124, 92, 252, 0.05);
+
+      --border: rgba(18, 16, 41, 0.08);
+      --border2: rgba(18, 16, 41, 0.14);
+
+      --accent: #6c4cf5;
+      --accent2: #8a72ff;
+      --accent3: #b8a8ff;
+      --accentglow: rgba(108, 76, 245, 0.14);
+    }
+
+    body.light-theme nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid var(--border);
+    }
+
+    body.light-theme .nav-link {
+      color: #4e4a68;
+    }
+
+    body.light-theme .nav-link:hover {
+      color: var(--accent);
+      background: rgba(108, 76, 245, 0.06);
+    }
+
+    body.light-theme .nav-sitename {
+      color: #16142a;
+    }
+
+    body.light-theme .nav-toggle {
+      color: #16142a;
+      background: rgba(18, 16, 41, 0.04);
+    }
+
+    body.light-theme .theme-label {
+      color: #4e4a68;
+    }
+
     .tcircle {
       width: 20px;
       height: 20px;
@@ -1381,14 +1582,6 @@
     }
 
     @media (max-width: 960px) {
-      nav {
-        padding: 0 24px;
-      }
-
-      nav .nav-link:not(.nav-btn) {
-        display: none;
-      }
-
       .hero {
         padding: 90px 24px 60px;
       }
@@ -1448,30 +1641,468 @@
         text-align: center;
       }
     }
+
+    /* CONTACT */
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .contact-left,
+    .contact-right {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+    }
+
+    .contact-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .grad {
+      background: linear-gradient(90deg, #a78bfa, #67e8f9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .contact-sub {
+      color: var(--t2);
+      margin-bottom: 20px;
+    }
+
+    .contact-mini {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .contact-mini div {
+      background: var(--bg3);
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+
+    .contact-auto ul {
+      padding-left: 18px;
+    }
+
+    .contact-auto li {
+      margin-bottom: 8px;
+      color: var(--t2);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .contact-right input,
+    .contact-right select,
+    .contact-right textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: white;
+      margin-top: 10px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .contact-right input:focus,
+    .contact-right select:focus,
+    .contact-right textarea:focus {
+      outline: none;
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 0 2px rgba(124, 92, 252, 0.15);
+    }
+
+    .contact-right input:hover,
+    .contact-right textarea:hover,
+    .contact-right select:hover {
+      border-color: var(--accent);
+    }
+
+    .contact-right textarea {
+      min-height: 100px;
+    }
+
+    .contact-right button {
+      margin-top: 15px;
+      background: var(--accent);
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .contact-info {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--t2);
+    }
+
+    @media(max-width: 900px) {
+      .contact-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* THEME MENU */
+
+
+    .theme-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--t2);
+    }
+
+
+
+    .theme-preview.default,
+    .theme-dot.default {
+      background: #7c5cfc;
+    }
+
+    .theme-preview.orange,
+    .theme-dot.orange {
+      background: #f97316;
+    }
+
+    .theme-preview.light,
+    .theme-dot.light {
+      background: #ffffff;
+      border: 2px solid #cfc9ea;
+    }
+
+
+
+    .theme-dropdown.show {
+      display: grid;
+      gap: 8px;
+    }
+
+
+
+    .theme-option:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border);
+    }
+
+    body.light-theme .theme-trigger {
+      background: rgba(18, 16, 41, 0.03);
+    }
+
+    body.light-theme .theme-dropdown {
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 20px 40px rgba(26, 20, 42, 0.12);
+    }
+    body.light-theme .icon-amber {
+  background: rgba(245, 158, 11, 0.16);
+  color: #d97706;
+}
+
+body.light-theme .icon-blue {
+  background: rgba(59, 130, 246, 0.16);
+  color: #2563eb;
+}
+
+body.light-theme .icon-green {
+  background: rgba(16, 185, 129, 0.16);
+  color: #059669;
+}
+
+body.light-theme .sp-icon i,
+body.light-theme .sp-icon svg {
+  color: inherit;
+}
+
+    body.light-theme .contact-right input,
+    body.light-theme .contact-right select,
+    body.light-theme .contact-right textarea {
+      background: #ffffff;
+      color: #16142a;
+      border: 1px solid #dcd6f7;
+    }
+
+    body.light-theme .contact-right input::placeholder,
+    body.light-theme .contact-right textarea::placeholder {
+      color: #8b85b0;
+    }
+
+    body.light-theme .contact-right select {
+      background: #ffffff;
+      color: #16142a;
+    }
+
+    body.light-theme .theme-option:hover {
+      background: rgba(108, 76, 245, 0.05);
+    }
+
+    /* THEME SWITCH */
+
+
+    .theme-dot.default {
+      background: #7c5cfc;
+    }
+
+    .theme-dot.orange {
+      background: #ff6a00;
+    }
+
+    .theme-menu-wrap {
+      position: relative;
+      margin-left: 14px;
+    }
+
+    .theme-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      color: var(--t2);
+      cursor: pointer;
+      font-family: 'Nexa', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 8px 10px;
+    }
+
+    .theme-trigger:hover {
+      color: var(--t1);
+    }
+
+    .theme-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: inherit;
+    }
+
+    .theme-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      background: rgba(12, 10, 25, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 10px;
+      display: none;
+      gap: 10px;
+      z-index: 99999;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .theme-dropdown.show {
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-option {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .theme-option:hover {
+      transform: scale(1.08);
+    }
+
+    .theme-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .theme-dot.default {
+      background: #7c5cfc;
+    }
+
+    .theme-dot.orange {
+      background: #f97316;
+    }
+
+    .theme-dot.light {
+      background: #ffffff;
+      border: 2px solid #cfc9ea;
+    }
+
+    body.light-theme .theme-trigger {
+      color: #4e4a68;
+    }
+
+    body.light-theme .theme-dropdown {
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 20px 40px rgba(26, 20, 42, 0.12);
+    }
+
+    body.light-theme .contact-right input,
+    body.light-theme .contact-right select,
+    body.light-theme .contact-right textarea {
+      background: #ffffff;
+      color: #16142a;
+      /* 🔥 main fix */
+      border: 1px solid #dcd6f7;
+    }
+
+    /* placeholder color */
+    body.light-theme .contact-right input::placeholder,
+    body.light-theme .contact-right textarea::placeholder {
+      color: #8b85b0;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .info-icon {
+      width: 38px;
+      height: 38px;
+      background: rgba(124, 92, 252, 0.1);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .info-item strong {
+      display: block;
+      font-size: 14px;
+      color: var(--t1);
+    }
+
+    .info-item p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--t2);
+    }
+    .social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icons a {
+  width: 36px;
+  height: 36px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: var(--t2);
+  transition: 0.2s;
+}
+
+.social-icons a:hover {
+  background: var(--accent);
+  color: white;
+  transform: translateY(-2px);
+}
   </style>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+
 </head>
 
 <body>
-
-  <!-- NAV -->
   <nav>
     <a class="nav-brand" href="/">
-      <div class="nav-logo">🤖</div>
+      <div class="nav-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: white;">
+          <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          <circle cx="18" cy="18" r="3"></circle>
+          <line x1="20" y1="20" x2="22" y2="22"></line>
+        </svg>
+      </div>
       <span class="nav-sitename">Smart Job Manager</span>
     </a>
-    
+
     <button class="nav-toggle" onclick="toggleMenu()">☰</button>
 
+    <!-- RIGHT SIDE -->
     <div class="nav-right" id="navMenu">
+
       <a href="#features" class="nav-link" onclick="toggleMenu()">Features</a>
+      <a href="#contact" class="nav-link" onclick="toggleMenu()">Contact</a>
+
+      <!-- THEME -->
+      <div class="theme-menu-wrap">
+        <button class="theme-trigger" type="button" onclick="toggleThemeMenu()">
+          <span class="theme-label">Theme</span>
+        </button>
+
+        <div class="theme-dropdown" id="themeDropdown">
+          <button class="theme-option" onclick="setTheme('default')">
+            <span class="theme-dot default"></span>
+          </button>
+
+          <button class="theme-option" onclick="setTheme('orange')">
+            <span class="theme-dot orange"></span>
+          </button>
+
+          <button class="theme-option" onclick="setTheme('light')">
+            <span class="theme-dot light"></span>
+          </button>
+        </div>
+      </div>
+
       {% if user.is_authenticated %}
       <a href="{% url 'dashboard' %}" class="nav-link nav-btn">Open Dashboard →</a>
       {% else %}
       <a href="{% url 'login' %}" class="nav-link">Sign In</a>
       <a href="{% url 'signup' %}" class="nav-link nav-btn">Join Free</a>
       {% endif %}
+
     </div>
   </nav>
+ 
+  <!-- MESSAGES -->
+  {% if messages %}
+    <div style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 10000; width: 90%; max-width: 600px;">
+      {% for message in messages %}
+        <div style="padding: 16px 20px; margin-bottom: 12px; border-radius: 12px; font-weight: 600; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px);
+          {% if message.tags == 'success' %}
+            background: rgba(16, 185, 129, 0.9); color: white;
+          {% else %}
+            background: rgba(239, 68, 68, 0.9); color: white;
+          {% endif %}
+        ">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+    <script>
+      setTimeout(() => {
+        const msgBox = document.querySelector('[style*="z-index: 10000"]');
+        if (msgBox) msgBox.style.display = 'none';
+      }, 5000);
+    </script>
+  {% endif %}
 
   <!-- HERO -->
   <section class="hero">
@@ -1489,8 +2120,19 @@
         actually fit.
       </p>
       <div class="hero-actions">
-        <a href="/dashboard/" class="btn-primary">🤖 Open AI Dashboard</a>
-        <a href="/dashboard/" class="btn-outline">⚡ Start Scraping</a>
+        <a href="/dashboard/" class="btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+            <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          Open AI Dashboard
+        </a>
+        <a href="/dashboard/" class="btn-outline">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+          </svg>
+          Start Scraping
+        </a>
       </div>
       <div class="hero-stats">
         <div class="hstat">
@@ -1523,19 +2165,25 @@
       </div>
       <div class="feat-grid">
         <div class="feat-card">
-          <div class="feat-icon">🧠</div>
+          <div class="feat-icon">
+            <i data-lucide="brain"></i>
+          </div>
           <div class="feat-title">AI Skill Extraction</div>
           <div class="feat-desc">Upload your resume — AI reads it, extracts every skill, and builds your profile
             automatically. Zero manual input required.</div>
         </div>
         <div class="feat-card">
-          <div class="feat-icon">⚡</div>
+          <div class="feat-icon">
+            <i data-lucide="zap"></i>
+          </div>
           <div class="feat-title">Smart Match Scoring</div>
           <div class="feat-desc">Every job gets a precise percentage score based on how well it matches your exact skill
             set. No guessing, no noise.</div>
         </div>
         <div class="feat-card">
-          <div class="feat-icon">🔍</div>
+          <div class="feat-icon">
+            <i data-lucide="search"></i>
+          </div>
           <div class="feat-title">Live Job Scraping</div>
           <div class="feat-desc">Pulls fresh listings from LinkedIn, Naukri and Indeed in real-time. Always current,
             always relevant to you.</div>
@@ -1583,26 +2231,26 @@
       <div class="sec-head">
         <div class="eyebrow">Platforms</div>
         <div class="sec-title">Choose Your Job Source</div>
-        <div class="sec-sub">3 platforms · 60+ jobs per search · all matched by AI</div>
+        <div class="sec-sub">3 platforms · 100+ jobs per search · all matched by AI</div>
       </div>
       <div class="plat-grid">
         <a href="/dashboard/?platform=linkedin" class="plat-card pc-li">
           <span class="plat-badge-chip">⏱ Moderate</span>
-          <span class="plat-icon">💼</span>
+          <span class="plat-icon plat-linkedin">in</span>
           <div class="plat-name">LinkedIn</div>
           <div class="plat-desc">Premium global listings. Best for senior and tech roles worldwide. Login session
             required for full access.</div>
         </a>
         <a href="/dashboard/?platform=naukri" class="plat-card pc-na">
-          <span class="plat-badge-chip">⚡ Fastest</span>
-          <span class="plat-icon">🇮🇳</span>
+          <span class="plat-badge-chip"><i class="fas fa-bolt"></i> Fastest</span>
+          <span class="plat-icon plat-naukri">N</span>
           <div class="plat-name">Naukri</div>
           <div class="plat-desc">India's largest job portal. Static HTML makes it the fastest and most reliable source
             for scraping.</div>
         </a>
         <a href="/dashboard/?platform=indeed" class="plat-card pc-in">
-          <span class="plat-badge-chip">🚀 Fast</span>
-          <span class="plat-icon">🔍</span>
+          <span class="plat-badge-chip"><i class="fas fa-rocket"></i> Fast</span>
+          <span class="plat-icon plat-indeed">I</span>
           <div class="plat-name">Indeed</div>
           <div class="plat-desc">Global aggregator. Faster than LinkedIn with no login needed. Excellent international
             coverage.</div>
@@ -1623,7 +2271,9 @@
       <div class="speed-grid">
         <div class="speed-card">
           <div class="sp-top">
-            <div class="sp-icon icon-amber">⏳</div>
+            <div class="sp-icon icon-amber">
+              <i data-lucide="clock"></i>
+            </div>
             <div>
               <p class="sp-nm">LinkedIn</p>
               <p class="sp-sub">Slowest · bot-protected</p>
@@ -1644,7 +2294,9 @@
         </div>
         <div class="speed-card">
           <div class="sp-top">
-            <div class="sp-icon icon-blue">🚀</div>
+            <div class="sp-icon icon-blue">
+              <i data-lucide="rocket"></i>
+            </div>
             <div>
               <p class="sp-nm">Indeed</p>
               <p class="sp-sub">Medium · faster than LinkedIn</p>
@@ -1665,7 +2317,9 @@
         </div>
         <div class="speed-card">
           <div class="sp-top">
-            <div class="sp-icon icon-green">⚡</div>
+            <div class="sp-icon icon-green">
+              <i data-lucide="zap"></i>
+            </div>
             <div>
               <p class="sp-nm">Naukri</p>
               <p class="sp-sub">Fastest · clean static HTML</p>
@@ -1693,13 +2347,19 @@
     <div class="lw">
       <div class="sec-head">
         <div class="eyebrow">From the Developer's Circle</div>
-        <div class="sec-title">Tools Built by People I Trust</div>
-        <div class="sec-sub" style="color:white;">Two products worth checking out </div>
+        <div class="sec-title">Explore More Tools</div>
+        <div class="sec-sub" style="color:white;">Tools that complement your workflow and enhance your job search
+          experience. </div>
       </div>
       <div class="fr-grid">
         <div class="fr-card">
           <div class="fr-head">
-            <div class="fr-av av-purple">🧑‍💻</div>
+            <div class="fr-av av-purple">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
             <div>
               <p class="fr-nm">Build Your Portfolio</p>
               <p class="fr-role">Portfolio Builder Platform</p>
@@ -1718,12 +2378,21 @@
             buildyourportfolio.in · Live Now
           </div>
           <a href="https://www.buildyourportfolio.in/" target="_blank" rel="noopener" class="fr-cta cta-p">
-            🌐 Visit buildyourportfolio.in →
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            Visit buildyourportfolio.in →
           </a>
         </div>
         <div class="fr-card">
           <div class="fr-head">
-            <div class="fr-av av-orange">⚡</div>
+            <div class="fr-av av-orange">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+              </svg>
+            </div>
             <div>
               <p class="fr-nm">ThunderCoil</p>
               <p class="fr-role">Real-time Communication Platform</p>
@@ -1742,28 +2411,159 @@
             thundercoil.online · Live Now
           </div>
           <a href="https://www.thundercoil.online" target="_blank" rel="noopener" class="fr-cta cta-o">
-            🌐 Visit thundercoil.online →
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            Visit thundercoil.online →
           </a>
         </div>
       </div>
+    </div>
+  </section>
+  <!-- CONTACT US -->
+  <section class="sec contact-sec" id="contact">
+    <div class="lw">
+
+      <div class="contact-wrap">
+
+        <!-- LEFT -->
+        <div class="contact-left">
+          <div class="contact-badge">
+            <span class="badge-live"></span>
+            Let’s talk business
+          </div>
+
+          <h2 class="contact-title">
+            Contact Us For <span class="grad">Smart Automation & Leads</span>
+          </h2>
+
+          <p class="contact-sub">
+            From job scraping to lead generation and custom dashboards — we build practical tools that save time and
+            turn web data into business opportunities.
+          </p>
+
+
+          <!-- AUTOMATION BLOCK -->
+          <div class="contact-auto">
+            <h3>Want to automate something?</h3>
+
+            <ul>
+              <li>Scrape jobs automatically from platforms</li>
+              <li>AI-based resume matching system</li>
+              <li>Build dashboards to track data</li>
+              <li>Automate repetitive business tasks</li>
+              <li>Generate business leads from website data</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="contact-right">
+
+          <h3>Discuss Your Idea</h3>
+          <p class="contact-form-sub">Tell us what you need and we’ll help you build it.</p>
+
+          <form action="{% url 'contact_us' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-grid">
+              <input type="text" name="full_name" placeholder="Full Name" required>
+              <input type="email" name="email" placeholder="Email Address" required>
+              <input type="text" name="phone" placeholder="Phone Number">
+              <input type="text" name="company" placeholder="Company / Website">
+            </div>
+
+            <select name="service" required>
+              <option value="">What do you need?</option>
+              <option value="Job Scraping">Job Scraping</option>
+              <option value="Lead Generation">Lead Generation</option>
+              <option value="Dashboard">Dashboard</option>
+              <option value="Automation">Automation</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <textarea name="message" placeholder="Tell us about your requirement..." required></textarea>
+
+            <button type="submit">Send Us</button>
+          </form>
+
+          <!-- CONTACT INFO -->
+          <div class="contact-info">
+            <div class="contact-info">
+
+              <div class="info-item">
+                <span class="info-icon"><i class="fas fa-envelope"></i></span>
+                <div>
+                  <strong>Email</strong>
+                  <p>
+  <a href="mailto:hello@smartjobmanager.com">
+    ffirm209@gmail.com
+  </a>
+</p>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <span class="info-icon"><i class="fas fa-phone"></i></span>
+                <div>
+                  <strong>Phone</strong>
+                  <p>+91 9468847580</p>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <span class="info-icon"><i class="fas fa-location-dot"></i></span>
+                <div>
+                  <strong>Location</strong>
+                  <p>Ahmedabad, Gujarat, India</p>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          <div class="follow-us">
+    <h4>Follow us</h4>
+
+    <div class="social-icons">
+      <a href="https://www.facebook.com/share/18baKXwrqK/?mibextid=wwXIfr"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.instagram.com/the_gunshot7538?igsh=ODhtMzc5Yzh0Z2c2&utm_source=qr"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.linkedin.com/in/gautam-kumawat-5793393a5/"><i class="fab fa-linkedin-in"></i></a>
+      
+    </div>
+  </div>
+
+</div>
+
+        </div>
+
+      </div>
+
     </div>
   </section>
 
   <!-- CTA -->
   <section class="cta-final">
     <div class="cta-inner">
-      <div class="cta-tag">🤖 AI-Powered Matching</div>
+      <div class="cta-tag">💼 AI-Powered Matching</div>
       <div class="cta-title">Ready for smarter job search?</div>
       <p class="cta-sub">Upload your resume and let AI rank every listing by how well it matches your exact skill set.
         Free, fast, intelligent.</p>
-      <a href="/dashboard/" class="btn-primary" style="font-size:16px;padding:17px 44px;">🤖 Open AI Dashboard</a>
+      <a href="/dashboard/" class="btn-primary" style="font-size:16px;padding:17px 44px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
+          <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+        Open AI Dashboard
+      </a>
     </div>
   </section>
 
+
   <!-- FOOTER -->
   <footer>
-    <div class="foot-left">Made with ❤️ by <strong>Gautam Kumawat</strong></div>
-    <div class="foot-right">Smart Job Manager · AI-Powered · 2025</div>
+    <div class="foot-left">© 2026 Smart Job Manager <strong>•  All rights reserved.</strong></div>
+    
   </footer>
 
   <script>
@@ -1771,7 +2571,16 @@
       const menu = document.getElementById('navMenu');
       menu.classList.toggle('active');
     }
-    
+    // 👇 ye naya code
+    document.addEventListener('click', function (e) {
+      const menu = document.getElementById('navMenu');
+      const nav = document.querySelector('nav');
+
+      if (!nav.contains(e.target) && menu.classList.contains('active')) {
+        menu.classList.remove('active');
+      }
+    });
+
     // Smooth reveal for sections
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -1807,7 +2616,51 @@
       setTheme(saved);
     })();
   </script>
+  <script>
+    lucide.createIcons();
+  </script>
+  <script>
+    function toggleThemeMenu() {
+      const dropdown = document.getElementById('themeDropdown');
+      dropdown.classList.toggle('show');
+    }
 
+    function setTheme(theme) {
+      document.body.classList.remove("orange-theme", "light-theme");
+
+      if (theme === "orange") {
+        document.body.classList.add("orange-theme");
+      }
+
+      if (theme === "light") {
+        document.body.classList.add("light-theme");
+      }
+
+      localStorage.setItem("sjm-theme", theme);
+
+      const dropdown = document.getElementById('themeDropdown');
+      if (dropdown) dropdown.classList.remove('show');
+    }
+
+    document.addEventListener('click', function (e) {
+      const wrap = document.querySelector('.theme-menu-wrap');
+      const dropdown = document.getElementById('themeDropdown');
+
+      if (wrap && dropdown && !wrap.contains(e.target)) {
+        dropdown.classList.remove('show');
+      }
+    });
+
+    (function () {
+      const savedTheme = localStorage.getItem("sjm-theme");
+      if (savedTheme === "orange") {
+        document.body.classList.add("orange-theme");
+      }
+      if (savedTheme === "light") {
+        document.body.classList.add("light-theme");
+      }
+    })();
+  </script>
 </body>
 
 </html>

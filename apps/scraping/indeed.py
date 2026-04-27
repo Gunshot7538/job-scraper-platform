@@ -72,7 +72,7 @@ def scrape_indeed_jobs(job_title, location):
                     apply_link = "https://www.indeed.com/"
 
                 salary_tag = card.find(string=re.compile(r"\$|₹|a year|a month|an hour", re.I))
-                salary = salary_tag.strip() if salary_tag else "Salary not mentioned"
+                salary = salary_tag.strip() if salary_tag else "Not Disclosed"
 
                 posted_date = ""
                 posted_tag = card.find("span", {"data-testid": "myJobsStateDate"})
@@ -100,14 +100,14 @@ def scrape_indeed_jobs(job_title, location):
                     soup2 = BeautifulSoup(html, "html.parser")
                     page_text = soup2.get_text(" ", strip=True)
 
-                    # Description
+                    # Parse description
                     desc = soup2.find("div", id="jobDescriptionText")
                     if not desc:
                         desc = soup2.find("div", {"class": "jobsearch-jobDescriptionText"})
                     if desc:
                         description = desc.get_text(separator=" ", strip=True)[:1500]
 
-                    # Experience
+                    # Extract experience info
                     exp_match = re.search(
                         r'(\d+\+?\s*(?:-|to)?\s*\d*\+?\s*years?)',
                         page_text,
@@ -118,7 +118,7 @@ def scrape_indeed_jobs(job_title, location):
                     else:
                         experience = "Not mentioned"
 
-                    # Skills
+                    # Extract skills from text
                     skills_found = []
                     common_skills = [
                         "Python", "Java", "SQL", "Django", "Flask", "AWS", "Azure",
@@ -134,7 +134,7 @@ def scrape_indeed_jobs(job_title, location):
                     if skills_found:
                         skills = ", ".join(skills_found)
 
-                    # Job type
+                    # Identify job type
                     lower_text = page_text.lower()
                     if "full-time" in lower_text or "full time" in lower_text:
                         job_type = "full-time"
@@ -153,7 +153,7 @@ def scrape_indeed_jobs(job_title, location):
                     else:
                         job_type = ""
 
-                    # Requirements
+                    # Extract requirements from list items
                     if desc:
                         li_tags = desc.find_all("li")
                         req_list = []

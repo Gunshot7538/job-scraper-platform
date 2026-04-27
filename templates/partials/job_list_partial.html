@@ -14,7 +14,7 @@
 {% endif %}
 
 <div class="job-list-header p-3 p-md-4 d-flex flex-wrap justify-content-between align-items-center gap-3"
-    style="background: rgba(255,255,255,0.01); border-bottom: 1px solid var(--border);">
+    style="background: rgba(255,255,255,0.01); border-bottom: 1px solid var(--line);">
     <div>
         <div class="d-flex align-items-center gap-3">
             <h5 class="fw-bold mb-0" style="color: var(--t1);">Recent Intelligence</h5>
@@ -22,7 +22,7 @@
             <span class="badge d-none d-sm-inline-block" style="
                     background: {% if 'linkedin' in active_platform|lower %}rgba(10, 102, 194, 0.1){% elif 'indeed' in active_platform|lower %}rgba(33, 100, 243, 0.1){% elif 'naukri' in active_platform|lower %}rgba(255, 117, 18, 0.1){% else %}rgba(124, 92, 252, 0.1){% endif %};
                     color: {% if 'linkedin' in active_platform|lower %}#0a66c2{% elif 'indeed' in active_platform|lower %}#2164f3{% elif 'naukri' in active_platform|lower %}#ff7512{% else %}var(--accent){% endif %};
-                    border: 1px solid {% if 'linkedin' in active_platform|lower %}rgba(10, 102, 194, 0.2){% elif 'indeed' in active_platform|lower %}rgba(33, 100, 243, 0.2){% elif 'naukri' in active_platform|lower %}rgba(255, 117, 18, 0.2){% else %}var(--border){% endif %};
+                    border: 1px solid {% if 'linkedin' in active_platform|lower %}rgba(10, 102, 194, 0.2){% elif 'indeed' in active_platform|lower %}rgba(33, 100, 243, 0.2){% elif 'naukri' in active_platform|lower %}rgba(255, 117, 18, 0.2){% else %}var(--line){% endif %};
                     padding: 6px 14px;
                     border-radius: 8px;
                     font-size: 11px;
@@ -39,7 +39,7 @@
 
     <div class="d-flex align-items-center gap-2 gap-md-3">
         <div class="d-flex align-items-center gap-2 p-1 px-2 px-md-3"
-            style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px;">
+            style="background: rgba(255,255,255,0.04); border: 1px solid var(--line); border-radius: 12px;">
             <span class="text-muted small fw-bold d-none d-sm-inline">Filter Exp:</span>
             <select id="expFilter" class="bg-transparent border-0 small outline-none"
                 style="cursor: pointer; outline: none; color: var(--t1); font-size: 12px;">
@@ -63,93 +63,150 @@
 {% if jobs %}
 <div class="table-responsive custom-scrollbar bg-transparent">
     <style>
-        .job-row:not(:last-child) td {
-            border-bottom: 1px solid var(--border) !important;
+        .job-table-row {
+            transition: background 0.2s ease;
+        }
+
+        .job-table-row:hover {
+            background: rgba(108, 99, 255, 0.03) !important;
+        }
+
+        .job-table-row td {
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+        }
+
+        .job-table-row:last-child td {
+            border-bottom: none;
+        }
+
+        .text-truncate-safe {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
         }
     </style>
-    <table class="table table-borderless mb-0 align-middle"
-        style="min-width: 900px; border-collapse: separate; border-spacing: 0; background: transparent !important; color: var(--t1);">
-        <thead style="background: rgba(255, 255, 255, 0.05);">
+    <table class="table mb-0"
+        style="min-width: 1000px; table-layout: fixed; border-collapse: collapse; background: transparent !important; color: var(--t1);">
+        <colgroup>
+            <col style="width: 28%;"> <!-- Company -->
+            <col style="width: 22%;"> <!-- Role -->
+            <col style="width: 14%;"> <!-- Salary -->
+            <col style="width: 10%;"> <!-- AI Score -->
+            <col style="width: 8%;"> <!-- Skills -->
+            <col style="width: 9%;"> <!-- Listed On -->
+            <col style="width: 9%;"> <!-- Action -->
+        </colgroup>
+        <thead style="background: rgba(108, 99, 255, 0.02);">
             <tr>
-                <th class="ps-4 py-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">COMPANY</th>
-                <th class="py-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">ROLE</th>
-                <th class="py-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">SALARY</th>
-                <th class="py-4 text-center" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">AI SCORE</th>
-                <th class="py-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">SKILLS</th>
-                <th class="py-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">LISTED ON</th>
-                <th class="py-4 text-end pe-4" style="letter-spacing: 2px; font-size: 12px; color: var(--t1); font-weight: 800; text-transform: uppercase; border-bottom: 2px solid var(--border) !important;">ACTION</th>
+                <th class="ps-4 py-3"
+                    style="letter-spacing: 1px; font-size: 11.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; border-bottom: 1px solid var(--line); border-top: none;">
+                    Company</th>
+                <th class="py-3"
+                    style="letter-spacing: 1px; font-size: 11.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; border-bottom: 1px solid var(--line); border-top: none;">
+                    Role</th>
+                <th class="py-3"
+                    style="letter-spacing: 1px; font-size: 11.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; border-bottom: 1px solid var(--line); border-top: none;">
+                    Salary</th>
+                <th class="py-3 text-center"
+                    style="letter-spacing: 1px; font-size: 11.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; border-bottom: 1px solid var(--line); border-top: none;">
+                    Match</th>
+                <th class="py-3 text-center"
+                    style="letter-spacing: 1px; font-size: 11.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; border-bottom: 1px solid var(--line); border-top: none;">
+                    Skills</th>
+                <th class="py-3"
+                    style="letter-spacing: 1px; font-size: 11.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; border-bottom: 1px solid var(--line); border-top: none;">
+                    Listed</th>
+                <th class="pe-4 py-3 text-end"
+                    style="letter-spacing: 1px; font-size: 11.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; border-bottom: 1px solid var(--line); border-top: none;">
+                    Action</th>
             </tr>
         </thead>
 
         <tbody style="font-size: 14px; background: transparent !important;">
             {% for job in jobs %}
-            <tr class="job-row"
-                style="transition: all 0.2s ease; background: transparent !important;">
-                <td class="ps-4 py-4" style="background: transparent !important;">
+            <tr class="job-table-row">
+                <td class="ps-4 py-3" style="background: transparent !important;">
                     <div class="d-flex align-items-center gap-3">
-                        <div
-                            style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, var(--accent), var(--accent2)); opacity: 0.9; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #fff; font-size: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                            {{ job.company|default:"X"|slice:":2"|upper }}
+                        <div class="company-avatar" data-company="{{ job.company|default:'Unknown Corp' }}"
+                            style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: linear-gradient(135deg, var(--accent), #7c72ff); opacity: 0.95; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); letter-spacing: 0.5px;">
                         </div>
-                        <div>
-                            <div class="fw-bold"
-                                style="color: var(--t1); font-size: 17px; letter-spacing: -0.5px; text-transform: capitalize;">
-                                {{ job.company|default:"Unknown Corp" }}</div>
+                        <div style="min-width: 0; flex: 1;">
+                            <div class="fw-bold text-truncate-safe"
+                                style="color: var(--t1); font-size: 15px; letter-spacing: -0.3px; text-transform: capitalize;"
+                                title="{{ job.company|default:'Unknown Corp' }}">
+                                {{ job.company|default:'Unknown Corp' }}
+                            </div>
                             <div class="text-muted small d-flex align-items-center gap-1 mt-1">
-                                📍 {{ job.location|default:"Global" }}
+                                <span class="text-truncate-safe d-flex align-items-center gap-1"
+                                    style="max-width: 120px;" title="{{ job.location|default:'Global' }}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                        style="opacity: 0.7;">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    {{ job.location|default:'Global' }}
+                                </span>
                                 <span class="mx-1" style="opacity: 0.3;">•</span>
-                                <span class="job-exp badge"
-                                    style="background: rgba(124, 92, 252, 0.05); color: var(--t2); font-weight: 500;">{{ job.experience|default:"Any" }}</span>
+                                <span class="job-exp text-nowrap" style="color: var(--t2); font-weight: 500;">{{ job.experience|default:'Any' }}</span>
                             </div>
                         </div>
                     </div>
                 </td>
 
-                <td class="py-4">
-                    <div class="fw-bold" style="color: var(--t1); font-size: 15px;">{{ job.title|default:"Job Opportunity" }}</div>
-                </td>
-
-                <td class="py-4">
-                    <div class="fw-bold text-success" style="font-size: 15px;">{{ job.salary|default:"Market Rate" }}
+                <td class="py-3 pr-3">
+                    <div class="fw-bold text-truncate-safe"
+                        style="color: var(--t1); font-size: 14.5px; padding-right: 16px;"
+                        title="{{ job.title|default:'Job Opportunity' }}">{{ job.title|default:'Job Opportunity' }}
                     </div>
                 </td>
 
-                <td class="py-4 text-center">
+                <td class="py-3">
+                    <div class="fw-bold text-success text-truncate-safe" style="font-size: 14px; padding-right: 16px;"
+                        title="{{ job.salary|default:'Not Disclosed' }}">{{ job.salary|default:'Not Disclosed' }}</div>
+                </td>
+
+                <td class="py-3 text-center">
                     {% if job.match_score > 0 %}
-                    <div class="d-inline-block px-3 py-2"
-                        style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 14px;">
-                        <span class="fw-bold" style="color: #10b981; font-size: 14px;">{{ job.match_score }}%</span>
+                    <div class="d-inline-flex align-items-center justify-content-center"
+                        style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 4px 10px; min-width: 48px;">
+                        <span class="fw-bold" style="color: #10b981; font-size: 13px;">{{ job.match_score }}%</span>
                     </div>
                     {% else %}
-                    <span class="text-muted opacity-50" style="font-size: 18px;">—</span>
+                    <span class="text-muted" style="opacity: 0.4;">—</span>
                     {% endif %}
                 </td>
 
-                <td class="py-4">
+                <td class="py-3 text-center">
                     {% if job.skills and job.skills != "Not Disclosed" %}
-                    <button class="badge border-0 py-2 px-3"
-                        style="background: var(--accentglow); color: var(--accent); border: 1px solid var(--border) !important; font-size: 11px; font-weight: 700; cursor: help;"
+                    <button class="badge border-0"
+                        style="background: var(--surface); color: var(--t2); border: 1px solid var(--line) !important; font-size: 11.5px; font-weight: 600; cursor: help; padding: 6px 10px; border-radius: 8px;"
                         data-bs-toggle="tooltip" data-bs-placement="top" title="{{ job.skills }}">
-                        View Skills
+                        Hover
                     </button>
                     {% else %}
-                    <span class="text-muted small">Not Disclosed</span>
+                    <span class="text-muted small" style="opacity: 0.5;">—</span>
                     {% endif %}
                 </td>
 
-                <td class="py-4">
-                    <div style="color: var(--t2); font-size: 13px; font-weight: 500;">{{ job.posted_date|default:"Recent" }}</div>
+                <td class="py-3">
+                    <div class="text-truncate-safe" style="color: var(--t2); font-size: 13px; font-weight: 500;">{{ job.posted_date|default:'Recent' }}</div>
                 </td>
 
-                <td class="pe-4 py-4 text-end">
+                <td class="pe-4 py-3 text-end">
                     <div class="d-flex justify-content-end gap-2">
-                        <button class="btn btn-sm"
-                            style="background: rgba(255,255,255,0.06); color: var(--t1); border: 1px solid var(--border); border-radius: 12px; font-weight: 600; padding: 8px 14px;"
-                            data-bs-toggle="tooltip" title="{{ job.description }}">
+                        <button type="button" class="btn btn-sm"
+                            style="background: var(--surface); color: var(--t1); border: 1px solid var(--line); border-radius: 8px; font-weight: 600; padding: 6px 12px; font-size: 12px; transition: all 0.2s ease;"
+                            onclick="openJobModal(this)" data-title="{{ job.title|escapejs }}"
+                            data-company="{{ job.company|escapejs }}" data-location="{{ job.location|escapejs }}"
+                            data-salary="{{ job.salary|default:'Not Disclosed'|escapejs }}"
+                            data-skills="{{ job.skills|escapejs }}" data-description="{{ job.description|escapejs }}">
                             Details
                         </button>
-                        <a href="{{ job.apply_link }}" target="_blank" class="btn btn-sm btn-premium"
-                            style="padding: 8px 20px; font-size: 13px;">
+                        <a href="{{ job.apply_link }}" target="_blank" class="btn btn-sm"
+                            style="background: var(--accent); color: #fff; border: none; border-radius: 8px; font-weight: 600; padding: 6px 16px; font-size: 12px; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);">
                             Apply
                         </a>
                     </div>
@@ -160,12 +217,40 @@
     </table>
 </div>
 
+<script>
+    function processCompanyAvatars() {
+        document.querySelectorAll('.company-avatar:not(.processed)').forEach(el => {
+            let name = el.getAttribute('data-company').trim();
+            if (!name || name === 'Unknown Corp') {
+                el.textContent = 'J';
+                el.classList.add('processed');
+                return;
+            }
+
+            let initials = "";
+            let words = name.split(/[\s_\.-]+/).filter(w => w.length > 0 && !['inc', 'ltd', 'llc', 'corp', 'pvt', 'software', 'solutions', 'systems', 'india', 'pvt.', 'ltd.'].includes(w.toLowerCase()));
+
+            if (words.length >= 2) {
+                initials = (words[0][0] + words[1][0]).toUpperCase();
+            } else if (words.length === 1) {
+                initials = words[0].substring(0, 2).toUpperCase();
+            } else {
+                initials = name.substring(0, 2).toUpperCase();
+            }
+
+            el.textContent = initials;
+            el.classList.add('processed');
+        });
+    }
+    processCompanyAvatars();
+</script>
+
 <div class="p-3 p-md-4 d-flex justify-content-center align-items-center"
-    style="background: rgba(255,255,255,0.01); border-top: 1px solid var(--border);">
+    style="background: rgba(255,255,255,0.01); border-top: 1px solid var(--line);">
     <div class="d-flex gap-2 align-items-center">
         {% if jobs.has_previous %}
         <a href="?page={{ jobs.previous_page_number }}" class="btn btn-sm px-3"
-            style="background: rgba(255,255,255,0.05); color: var(--t1); border-radius: 10px; border: 1px solid var(--border);">Previous</a>
+            style="background: rgba(255,255,255,0.05); color: var(--t1); border-radius: 10px; border: 1px solid var(--line);">Previous</a>
         {% endif %}
 
         <div class="px-3 py-1"
@@ -175,7 +260,7 @@
 
         {% if jobs.has_next %}
         <a href="?page={{ jobs.next_page_number }}" class="btn btn-sm px-3"
-            style="background: rgba(255,255,255,0.05); color: var(--t1); border-radius: 10px; border: 1px solid var(--border);">Next</a>
+            style="background: rgba(255,255,255,0.05); color: var(--t1); border-radius: 10px; border: 1px solid var(--line);">Next</a>
         {% endif %}
     </div>
 </div>
@@ -186,3 +271,133 @@
     <p class="text-muted">Initialize the Intelligence Harvester to begin data extraction.</p>
 </div>
 {% endif %}
+
+<!-- Job Details Modal -->
+<div class="job-modal-overlay" id="jobModalOverlay" onclick="closeJobModal(event)">
+    <div class="job-modal" onclick="event.stopPropagation()">
+        <div class="modal-header"
+            style="padding: 24px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: flex-start; background: var(--surface);">
+            <div>
+                <h4 id="modalJobTitle"
+                    style="font-weight: 800; color: var(--t1); margin-bottom: 8px; font-size: 1.35rem; letter-spacing: -0.5px;">
+                    Job Title</h4>
+                <div
+                    style="display: flex; gap: 14px; color: var(--t2); font-size: 0.95rem; font-weight: 500; flex-wrap: wrap;">
+                    <span id="modalJobCompany" class="d-flex align-items-center gap-1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.8;">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                        Company
+                    </span>
+                    <span id="modalJobLocation" class="d-flex align-items-center gap-1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.8;">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        Location
+                    </span>
+                </div>
+            </div>
+            <button class="close-btn" onclick="closeJobModal()"
+                style="background: var(--line); border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 18px; color: var(--t1); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.2s ease;">&times;</button>
+        </div>
+        <div class="modal-body custom-scrollbar"
+            style="padding: 24px; max-height: 60vh; overflow-y: auto; background: var(--bg);">
+            <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+                <div
+                    style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; border: 1px solid rgba(16, 185, 129, 0.2);">
+                    💰 <span id="modalJobSalary">Salary</span>
+                </div>
+                <div
+                    style="background: var(--accentglow); color: var(--accent); padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; border: 1px solid rgba(108, 99, 255, 0.15);">
+                    ⚡ <span id="modalJobSkills">Skills</span>
+                </div>
+            </div>
+            <h6 style="font-weight: 800; color: var(--t1); margin-bottom: 14px; font-size: 1.05rem;">Job Description
+            </h6>
+            <div id="modalJobDescription"
+                style="color: var(--t2); font-size: 0.95rem; line-height: 1.7; white-space: pre-wrap;">
+                Description goes here.
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .job-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 10500;
+        background: rgba(15, 23, 42, 0.5);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .job-modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .job-modal {
+        background: var(--surface);
+        width: 100%;
+        max-width: 680px;
+        border-radius: 24px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        transform: translateY(20px) scale(0.96);
+        opacity: 0;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+        margin: 20px;
+        border: 1px solid var(--line);
+        overflow: hidden;
+    }
+
+    .job-modal-overlay.active .job-modal {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+
+    .modal-header .close-btn:hover {
+        background: rgba(239, 68, 68, 0.1) !important;
+        color: var(--danger) !important;
+    }
+</style>
+
+<script>
+    function openJobModal(btn) {
+        document.getElementById('modalJobTitle').textContent = btn.getAttribute('data-title');
+        document.getElementById('modalJobCompany').innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.8; margin-right: 4px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>${btn.getAttribute('data-company')}`;
+        document.getElementById('modalJobLocation').innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.8; margin-right: 4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>${btn.getAttribute('data-location')}`;
+        document.getElementById('modalJobSalary').textContent = btn.getAttribute('data-salary');
+        document.getElementById('modalJobSkills').textContent = btn.getAttribute('data-skills');
+
+        let desc = btn.getAttribute('data-description');
+        if (!desc || desc === 'None') desc = "No detailed description provided by the employer.";
+        document.getElementById('modalJobDescription').textContent = desc;
+
+        document.getElementById('jobModalOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden'; // prevent bg scroll
+    }
+
+    function closeJobModal(e) {
+        if (e && e.target !== document.getElementById('jobModalOverlay')) return;
+        document.getElementById('jobModalOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && document.getElementById('jobModalOverlay')?.classList.contains('active')) {
+            closeJobModal();
+        }
+    });
+</script>

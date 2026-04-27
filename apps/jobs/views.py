@@ -108,3 +108,26 @@ def clear_resume(request):
     Job.objects.filter(user=request.user).update(match_score=0.0, star_rating=0)
     messages.info(request, 'Resume cleared. Showing all jobs.')
     return redirect('dashboard')  # ← dashboard pe wapas
+
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import SupportQuery
+
+@login_required
+def submit_support_query(request):
+    """Handle help & support query submissions via AJAX"""
+    if request.method == 'POST':
+        message = request.POST.get('message', '').strip()
+
+        if not message:
+            return JsonResponse({'success': False, 'error': 'Message cannot be empty.'}, status=400)
+
+        SupportQuery.objects.create(
+            user=request.user,
+            message=message,
+        )
+
+        return JsonResponse({'success': True, 'message': 'Your query has been submitted successfully!'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)

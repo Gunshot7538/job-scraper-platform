@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-^#5jpyy8!dg#obe=1ybynaq3d8*9e8zd(-d1l7@%z-)5gdwtv+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.109', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['172.20.10.6', '127.0.0.1', 'localhost']
 
 # CSRF Trusted Origins for local network access 
 CSRF_TRUSTED_ORIGINS = [
@@ -131,6 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'

@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
+from django.conf import settings
 
 from apps.jobs.models import Job
 from apps.scraping.factory import scrape_jobs_by_platform
@@ -73,7 +74,7 @@ def dashboard_view(request):
             except Exception as e:
                 messages.error(request, f"Scraping error: {e}")
 
-    # ================= SEARCH =================
+    # Search filters
     search_query = request.GET.get('q', '')
 
     platform_filter = request.GET.get('platform', '')
@@ -92,7 +93,7 @@ def dashboard_view(request):
 
     jobs = jobs.order_by('-created_at')
 
-    # ================= SKILL MATCH SCORE =================
+    # Match scoring logic
     resume_data   = request.session.get('resume_data', None)
     resume_skills = set()
 
@@ -123,15 +124,15 @@ def dashboard_view(request):
         }
 
         if resume_skills:
-            # Job ki skills nikalo
+            # Get job skills
             job_skills_str = job.skills or ''
             has_explicit   = len(job_skills_str.strip()) > 5
 
             if has_explicit:
-                # Naukri: comma separated skills directly available
+                # Naukri provides comma separated skills directly
                 job_skills = set(s.strip().lower() for s in job_skills_str.split(',') if s.strip())
             else:
-                # LinkedIn/Indeed: NLP se description se extract karo
+                # Extract skills from description for LinkedIn/Indeed
                 full_text  = ((job.description or '') + ' ' + (job.requirements or '')).strip()
                 extracted  = extract_skills(full_text) if full_text else []
                 job_skills = set(s.lower().strip() for s in extracted if s.strip())
@@ -149,11 +150,11 @@ def dashboard_view(request):
 
         jobs_with_score.append(job_dict)
 
-    # Score ke hisaab se sort karo (sirf jab resume upload ho)
+    # Sort by match score if resume is present
     if resume_skills:
         jobs_with_score.sort(key=lambda x: x['match_score'], reverse=True)
 
-    # ================= STATS =================
+    # Calculate dashboard stats
     total_jobs_count = len(jobs_with_score)
     avg_match = 0
     if total_jobs_count > 0:
@@ -164,7 +165,7 @@ def dashboard_view(request):
         p = j['platform'].capitalize()
         platforms[p] = platforms.get(p, 0) + 1
 
-    # ================= PAGINATION =================
+    # Pagination handling
     paginator   = Paginator(jobs_with_score, 20)
     page_number = request.GET.get('page')
     page_obj    = paginator.get_page(page_number)
@@ -184,7 +185,7 @@ def dashboard_view(request):
     return render(request, 'dashboard.html', context)
 
 
-# ================= CSV DOWNLOAD =================
+# Export jobs as CSV
 @login_required
 def download_csv(request):
     jobs = Job.objects.filter(user=request.user).order_by('-created_at')
@@ -201,7 +202,7 @@ def download_csv(request):
     return response
 
 
-# ================= EMAIL SEND =================
+# Email CSV attachment to user
 @login_required
 def send_email(request):
     if request.method == 'POST':
@@ -230,3 +231,41 @@ def send_email(request):
 
     return redirect('dashboard')
 
+
+def contact_view(request):
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        email_addr = request.POST.get('email')
+        phone     = request.POST.get('phone', 'N/A')
+        company   = request.POST.get('company', 'N/A')
+        service   = request.POST.get('service', 'N/A')
+        message   = request.POST.get('message', '')
+
+        subject = f"New Lead: {service} from {full_name}"
+        body = f"""
+        New Message from Smart Job Manager Contact Form:
+
+        Name: {full_name}
+        Email: {email_addr}
+        Phone: {phone}
+        Company: {company}
+        Requirement: {service}
+
+        Message:
+        {message}
+        """
+        
+        try:
+            email = EmailMessage(
+                subject=subject,
+                body=body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[settings.DEFAULT_FROM_EMAIL], # Send to admin
+                reply_to=[email_addr]
+            )
+            email.send()
+            messages.success(request, "Message sent successfully! We will contact you soon.")
+        except Exception as e:
+            messages.error(request, f"Error sending message: {e}")
+
+    return redirect('home')

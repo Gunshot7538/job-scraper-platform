@@ -5,152 +5,87 @@
 
 {% block content %}
 <style>
-    @import url('https://api.fontshare.com/v2/css?f[]=nexa@900,700,400,100&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
     :root {
-        --bg: #030209;
-        --bg2: #070614;
-        --bg3: #0d0b1e;
-        --accent: #6366f1;
-        --accent-light: #818cf8;
-        --accent-glow: rgba(99, 102, 241, 0.15);
-        --border: rgba(255, 255, 255, 0.08);
-        --border2: rgba(255, 255, 255, 0.15);
-        --t1: #f8fafc;
-        --t2: #94a3b8;
-        --t3: #475569;
-        --card: rgba(13, 11, 30, 0.6);
-        --radius: 12px;
-        --font-main: 'Outfit', sans-serif;
-        --stat-grad: linear-gradient(135deg, #fff 0%, var(--accent-light) 100%);
+        --bg: #f6f7fb;
+        --surface: #ffffff;
+        --surface-2: #f9fafc;
+        --line: #e8ebf2;
+        --text: #101828;
+        --muted: #667085;
+        --accent: #6c63ff;
+        --accent-soft: rgba(108, 99, 255, 0.10);
+        --success: #12b76a;
+        --danger: #ef4444;
+        --info: #2563eb;
+        --shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
+        --radius: 20px;
     }
 
-    /* Theme Variants */
     body.theme-green {
         --accent: #10b981;
-        --accent-light: #34d399;
-        --accent-glow: rgba(16, 185, 129, 0.15);
-    }
-    body.theme-gold {
-        --accent: #f59e0b;
-        --accent-light: #fbbf24;
-        --accent-glow: rgba(245, 158, 11, 0.15);
-    }
-    body.theme-light {
-        --bg: #f8fafc;
-        --bg2: #f1f5f9;
-        --bg3: #e2e8f0;
-        --t1: #0f172a;
-        --t2: #475569;
-        --t3: #94a3b8;
-        --border: rgba(0, 0, 0, 0.08);
-        --border2: rgba(0, 0, 0, 0.15);
-        --card: #ffffff;
-        --stat-grad: linear-gradient(135deg, #0f172a 0%, #475569 100%);
-    }
-    body.theme-silver {
-        --accent: #6b7280;
-        --accent-light: #9ca3af;
-        --accent-glow: rgba(107, 114, 128, 0.15);
+        --accent-soft: rgba(16, 185, 129, 0.10);
     }
 
-    *, ::after, ::before {
+    body.theme-gold {
+        --accent: #f59e0b;
+        --accent-soft: rgba(245, 158, 11, 0.10);
+    }
+
+    body.theme-light {
+        --bg: #ffffff;
+        --surface: #ffffff;
+        --surface-2: #f8fafc;
+        --line: #e9edf5;
+        --text: #101828;
+        --muted: #667085;
+        --accent: #6c63ff;
+        --accent-soft: rgba(108, 99, 255, 0.10);
+    }
+
+    body.theme-silver {
+        --accent: #6b7280;
+        --accent-soft: rgba(107, 114, 128, 0.10);
+    }
+
+    *,
+    *::before,
+    *::after {
         box-sizing: border-box;
     }
 
+    html,
     body {
-        font-family: var(--font-main) !important;
-        background-color: var(--bg) !important;
-        color: var(--t1) !important;
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
         width: 100%;
-        -webkit-font-smoothing: antialiased;
+        max-width: 100%;
+        overflow-x: hidden;
     }
 
-    /* ── Typography System ── */
-    h1 { font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 800; letter-spacing: -0.02em; }
-    h2 { font-size: clamp(1.25rem, 4vw, 1.75rem); font-weight: 700; letter-spacing: -0.01em; }
-    h5 { font-size: 1.125rem; font-weight: 600; }
-    p { font-size: 0.9375rem; color: var(--t2); line-height: 1.6; }
-
-    /* ── Modern Layout ── */
-    #sidebar {
-        width: 280px;
-        background: var(--bg);
-        border-right: 1px solid var(--border);
-        position: fixed;
-        left: 0;
-        top: 0;
-        height: 100vh;
-        z-index: 1050;
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif !important;
+        background: var(--bg) !important;
+        color: var(--text) !important;
     }
 
-    #main-content {
-        margin-left: 280px;
-        width: calc(100% - 280px);
+    .dashboard-shell {
         min-height: 100vh;
-        transition: all 0.4s ease;
-    }
-
-    .glass-card {
-        background: var(--card);
-        backdrop-filter: blur(12px);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 1.5rem;
-        transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .glass-card:hover {
-        border-color: rgba(255,255,255,0.15);
-    }
-
-    /* ── Responsive Grid ── */
-    .dashboard-grid {
-        display: grid;
-        gap: 1.5rem;
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    @media (min-width: 768px) {
-        .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (min-width: 1200px) {
-        .dashboard-grid { grid-template-columns: repeat(4, 1fr); }
-    }
-
-    /* ── Mobile Overrides ── */
-    @media (max-width: 991px) {
-        #sidebar {
-            width: 280px;
-            transform: translateX(-100%);
-        }
-        #sidebar.mobile-active {
-            transform: translateX(0);
-        }
-        .custom-navbar {
-            padding: 0 15px !important;
-            height: auto !important;
-            min-height: 64px;
-        }
-        .dashboard-content {
-            padding: 1rem !important;
-        }
+        background:
+            linear-gradient(rgba(108, 99, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(108, 99, 255, 0.03) 1px, transparent 1px),
+            var(--bg);
+        background-size: 48px 48px, 48px 48px, auto;
     }
 
     .sidebar-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.4);
-        backdrop-filter: blur(4px);
+        background: rgba(15, 23, 42, 0.35);
         z-index: 1040;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.3s ease;
+        transition: 0.25s ease;
     }
 
     .sidebar-overlay.active {
@@ -158,508 +93,1641 @@
         pointer-events: auto;
     }
 
-    .custom-navbar {
-        min-height: 80px;
-        background: rgba(3, 2, 9, 0.9) !important;
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border) !important;
-        padding: 12px 1rem !important;
-        display: flex;
-        align-items: center;
-        position: sticky;
+    #sidebar {
+        width: 88px;
+        background: rgba(255, 255, 255, 0.92);
+        border-right: 1px solid var(--line);
+        position: fixed;
+        left: 0;
         top: 0;
-        z-index: 1000;
-        width: 100%;
-    }
-
-    @media (min-width: 992px) {
-        .custom-navbar {
-            height: 90px;
-            padding: 0 40px !important;
-        }
-    }
-
-    .sidebar-link {
+        height: 100vh;
+        z-index: 1050;
         display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 20px;
-        color: var(--t2);
-        text-decoration: none;
-        font-weight: 500;
-        border-radius: 8px;
-        margin: 4px 16px;
-        transition: all 0.2s;
+        flex-direction: column;
+        transition: width 0.28s ease, transform 0.28s ease;
+        backdrop-filter: blur(18px);
     }
 
-    .sidebar-link:hover, .sidebar-link.active {
-        background: rgba(255,255,255,0.05);
-        color: var(--t1);
-    }
-
-    .btn-premium {
-        background: var(--accent);
-        color: white;
-        font-weight: 600;
-        padding: 10px 20px;
-        border-radius: 8px;
-        border: none;
-        transition: filter 0.2s;
-    }
-
-    .btn-premium:hover { filter: brightness(1.1); }
-
-
-    /* Grid Background */
-    .dashboard-wrapper {
-        position: relative;
-        min-height: 100vh;
-        background-color: var(--bg);
-        overflow-x: hidden;
-        width: 100%;
-    }
-
-    .dashboard-wrapper::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        background-image:
-            linear-gradient(rgba(124, 92, 252, 0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(124, 92, 252, 0.04) 1px, transparent 1px);
-        background-size: 60px 60px;
-        mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
-        pointer-events: none;
-        opacity: var(--theme-invert, 1);
+    #sidebar.expanded {
+        width: 250px;
     }
 
     #main-content {
-        margin-left: 0;
-        width: 100%;
+        margin-left: 88px;
+        width: calc(100% - 88px);
         min-height: 100vh;
-        position: relative;
-        z-index: 1;
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: 0.28s ease;
     }
 
-    @media (min-width: 992px) {
-        #sidebar {
-            width: 85px;
-            transform: translateX(0);
-        }
-        #sidebar.expanded {
-            width: 280px;
-        }
-        #main-content {
-            margin-left: 85px;
-            width: calc(100% - 85px);
-        }
-        #main-content.sidebar-expanded {
-            margin-left: 280px;
-            width: calc(100% - 280px);
-        }
+    #main-content.sidebar-expanded {
+        margin-left: 250px;
+        width: calc(100% - 250px);
     }
 
-    .glass-card {
-        background: var(--card) !important;
-        backdrop-filter: blur(20px);
-        border: 1px solid var(--border) !important;
-        border-radius: 20px !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
+    .brand-wrap {
+        height: 86px;
+        padding: 18px 18px 14px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+        color: inherit;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .brand-badge {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--accent), #8b5cf6);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 18px;
+        flex-shrink: 0;
+        box-shadow: 0 10px 20px rgba(108, 99, 255, 0.18);
+    }
+
+    .nav-text {
+        opacity: 0;
+        width: 0;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        transition: 0.2s ease;
+        white-space: nowrap;
     }
 
-    .glass-card:hover {
-        border-color: var(--border2) !important;
-        background: var(--card) !important;
-        transform: translateY(-4px);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    #sidebar.expanded .nav-text {
+        opacity: 1;
+        width: auto;
     }
 
-    .job-row {
-        transition: all 0.2s ease;
-    }
-
-    .job-row:hover {
-        background: rgba(124, 92, 252, 0.03) !important;
-    }
-
-    /* Force transparency to fix visibility issues */
-    .table,
-    .table> :not(caption)>*>* {
-        background-color: transparent !important;
-        color: var(--t1) !important;
-        box-shadow: none !important;
-    }
-
-    .stat-card {
-        padding: 18px 22px;
+    .sidebar-menu {
+        padding: 16px 12px;
         display: flex;
         flex-direction: column;
         gap: 8px;
     }
 
-    .stat-val {
-        font-size: 1.8rem;
-        font-weight: 900;
-        background: var(--stat-grad);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: -1px;
-    }
-
-    .stat-label {
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        color: var(--t2);
-        font-weight: 700;
-    }
-
-    .custom-navbar {
-        background: rgba(4, 3, 12, 0.7) !important;
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border) !important;
-        height: 90px;
-        padding: 0 40px !important;
-        width: 100%;
-    }
-
-    @media (min-width: 992px) {
-        .custom-navbar {
-            padding: 0 40px !important;
-            height: 90px;
-        }
-    }
-
     .sidebar-link {
-        color: var(--t2) !important;
-        border-radius: 18px !important;
-        margin: 6px 14px;
-        padding: 16px !important;
-        transition: all 0.3s;
+        height: 52px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
+        gap: 14px;
+        padding: 0 16px;
         text-decoration: none;
+        color: var(--muted);
+        font-weight: 600;
+        transition: 0.2s ease;
     }
 
     .sidebar-link:hover {
-        background: rgba(124, 92, 252, 0.08) !important;
-        color: var(--t1) !important;
+        background: var(--accent-soft);
+        color: var(--accent);
     }
 
     .sidebar-link.active {
-        background: var(--accent) !important;
-        color: white !important;
-        box-shadow: 0 4px 15px rgba(124, 92, 252, 0.4);
+        background: linear-gradient(135deg, var(--accent), #7c72ff);
+        color: #fff;
+        box-shadow: 0 12px 24px rgba(108, 99, 255, 0.22);
     }
 
-    .nav-text {
+    .sidebar-user {
+        margin-top: auto;
+        padding: 16px 12px;
+        border-top: 1px solid var(--line);
+    }
+
+    .user-card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 14px;
+        text-align: center;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .user-details {
         opacity: 0;
-        white-space: nowrap;
-        margin-left: 15px;
-        font-weight: 600;
-        transition: opacity 0.3s;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.2s ease;
+        width: 100%;
     }
 
-    .expanded .nav-text {
+    #sidebar.expanded .user-details {
+        opacity: 1;
+        max-height: 150px;
+        margin-top: 10px;
+    }
+
+    .logout-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 10px;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--text);
+        border-radius: 14px;
+        padding: 10px 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .logout-btn:hover {
+        background: rgba(239, 68, 68, 0.06);
+        border-color: rgba(239, 68, 68, 0.25);
+        color: var(--danger);
+    }
+
+    /* ── Logout Confirmation Modal ── */
+    .logout-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+    }
+
+    .logout-modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .logout-modal {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(24px);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 36px 32px 28px;
+        width: min(420px, 92vw);
+        box-shadow: 0 32px 64px rgba(16, 24, 40, 0.18), 0 0 0 1px rgba(108, 99, 255, 0.05);
+        transform: scale(0.92) translateY(12px);
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+        opacity: 0;
+        text-align: center;
+    }
+
+    .logout-modal-overlay.active .logout-modal {
+        transform: scale(1) translateY(0);
         opacity: 1;
     }
 
-    .btn-premium {
-        background: var(--accent);
-        border: none;
-        color: white;
-        font-weight: 700;
-        border-radius: 14px;
-        padding: 12px 24px;
-        transition: all 0.3s;
-        box-shadow: 0 4px 15px rgba(124, 92, 252, 0.3);
+    .logout-modal-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.05));
+        display: grid;
+        place-items: center;
+        font-size: 28px;
+        margin: 0 auto 20px;
+        border: 1px solid rgba(239, 68, 68, 0.12);
     }
 
-    .btn-premium:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(124, 92, 252, 0.5);
-        background: #6d4fe0;
+    .logout-modal h3 {
+        margin: 0 0 8px;
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--text);
     }
 
-    .search-box-wrapper {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 10px 20px;
-        width: 100%;
-        max-width: 300px;
-        transition: all 0.3s;
+    .logout-modal p {
+        margin: 0 0 28px;
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.5;
     }
 
-    .container-fluid {
-    flex-wrap: nowrap !important;
-}
-
-
-    .search-box-wrapper:focus-within {
-        border-color: var(--accent);
-        background: rgba(255, 255, 255, 0.07);
-        box-shadow: 0 0 0 4px rgba(124, 92, 252, 0.1);
-    }
-
-    .search-box-wrapper input {
-        background: transparent;
-        border: none;
-        color: white;
-        outline: none;
-        font-size: 14px;
-        width: 100%;
-    }
-
-    .user-profile-sidebar {
-        margin-top: auto;
-        padding: 20px;
-        border-top: 1px solid var(--border);
+    .logout-modal-actions {
         display: flex;
-        align-items: center;
         gap: 12px;
     }
 
-    /* Glow Elements */
-    .glow-orb {
-        position: absolute;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(124, 92, 252, 0.12) 0%, transparent 70%);
+    .logout-modal-cancel {
+        flex: 1;
+        height: 50px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--text);
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .logout-modal-cancel:hover {
+        background: var(--surface-2);
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .logout-modal-confirm {
+        flex: 1;
+        height: 50px;
+        border-radius: 14px;
+        border: none;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        box-shadow: 0 12px 24px rgba(239, 68, 68, 0.22);
+        transition: all 0.2s ease;
+    }
+
+    .logout-modal-confirm:hover {
+        box-shadow: 0 16px 32px rgba(239, 68, 68, 0.32);
+        transform: translateY(-1px);
+    }
+
+    /* ── Help & Support Panel ── */
+    .help-panel-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(4px);
+        opacity: 0;
         pointer-events: none;
-        z-index: -1;
+        transition: opacity 0.3s ease;
+    }
+
+    .help-panel-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .help-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: min(440px, 94vw);
+        height: 100vh;
+        z-index: 9999;
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(24px);
+        border-left: 1px solid var(--line);
+        box-shadow: -20px 0 60px rgba(16, 24, 40, 0.12);
+        transform: translateX(100%);
+        transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .help-panel.active {
+        transform: translateX(0);
+    }
+
+    .help-panel-header {
+        padding: 24px 24px 20px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+    }
+
+    .help-panel-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .help-close-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--muted);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        font-size: 18px;
+        transition: all 0.2s ease;
+    }
+
+    .help-close-btn:hover {
+        background: rgba(239, 68, 68, 0.06);
+        border-color: rgba(239, 68, 68, 0.25);
+        color: var(--danger);
+    }
+
+    .help-panel-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px;
+    }
+
+    .help-section-title {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        font-weight: 700;
+        margin-bottom: 14px;
+    }
+
+    .faq-item {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        transition: border-color 0.2s ease;
+    }
+
+    .faq-item:hover {
+        border-color: rgba(108, 99, 255, 0.25);
+    }
+
+    .faq-question {
+        width: 100%;
+        padding: 16px 18px;
+        background: transparent;
+        border: none;
+        text-align: left;
+        font-size: 0.94rem;
+        font-weight: 600;
+        color: var(--text);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        transition: background 0.2s ease;
+    }
+
+    .faq-question:hover {
+        background: var(--accent-soft);
+    }
+
+    .faq-arrow {
+        font-size: 12px;
+        color: var(--muted);
+        transition: transform 0.25s ease;
+        flex-shrink: 0;
+    }
+
+    .faq-item.open .faq-arrow {
+        transform: rotate(180deg);
+        color: var(--accent);
+    }
+
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .faq-item.open .faq-answer {
+        max-height: 200px;
+    }
+
+    .faq-answer-inner {
+        padding: 0 18px 16px;
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .help-divider {
+        height: 1px;
+        background: var(--line);
+        margin: 24px 0;
+    }
+
+    .help-query-box {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 20px;
+        background: var(--surface-2);
+    }
+
+    .help-query-box label {
+        display: block;
+        font-size: 0.94rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 12px;
+    }
+
+    .help-query-box textarea {
+        width: 100%;
+        min-height: 110px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        padding: 14px 16px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: var(--text);
+        outline: none;
+        resize: vertical;
+        transition: border-color 0.2s ease;
+    }
+
+    .help-query-box textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .help-query-box textarea::placeholder {
+        color: #98a2b3;
+    }
+
+    .help-submit-btn {
+        width: 100%;
+        height: 48px;
+        margin-top: 14px;
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--accent), #7c72ff);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        box-shadow: 0 12px 24px rgba(108, 99, 255, 0.18);
+        transition: all 0.2s ease;
+    }
+
+    .help-submit-btn:hover {
+        box-shadow: 0 16px 32px rgba(108, 99, 255, 0.28);
+        transform: translateY(-1px);
+    }
+
+    .help-submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .help-success-msg {
+        display: none;
+        margin-top: 14px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        background: rgba(18, 183, 106, 0.08);
+        border: 1px solid rgba(18, 183, 106, 0.2);
+        color: #059669;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    /* ── How It Works Guide Panel ── */
+    .guide-panel-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .guide-panel-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .guide-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: min(480px, 94vw);
+        height: 100vh;
+        z-index: 9999;
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(24px);
+        border-left: 1px solid var(--line);
+        box-shadow: -20px 0 60px rgba(16, 24, 40, 0.12);
+        transform: translateX(100%);
+        transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .guide-panel.active {
+        transform: translateX(0);
+    }
+
+    .guide-panel-header {
+        padding: 24px 24px 20px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+    }
+
+    .guide-panel-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .guide-panel-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 28px 24px;
+    }
+
+    .guide-intro {
+        margin-bottom: 28px;
+        padding: 18px;
+        border-radius: 16px;
+        background: var(--accent-soft);
+        border: 1px solid rgba(108, 99, 255, 0.12);
+    }
+
+    .guide-intro p {
+        margin: 0;
+        color: var(--text);
+        font-size: 0.92rem;
+        line-height: 1.6;
+    }
+
+    .guide-flow {
+        position: relative;
+        padding-left: 40px;
+    }
+
+    .guide-flow::before {
+        content: '';
+        position: absolute;
+        left: 19px;
+        top: 24px;
+        bottom: 24px;
+        width: 2px;
+        background: linear-gradient(180deg, var(--accent), rgba(108, 99, 255, 0.15));
+        border-radius: 2px;
+    }
+
+    .guide-step {
+        position: relative;
+        margin-bottom: 8px;
+        animation: guideStepIn 0.4s ease both;
+    }
+
+    .guide-step:nth-child(1) {
+        animation-delay: 0.05s;
+    }
+
+    .guide-step:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .guide-step:nth-child(3) {
+        animation-delay: 0.15s;
+    }
+
+    .guide-step:nth-child(4) {
+        animation-delay: 0.2s;
+    }
+
+    .guide-step:nth-child(5) {
+        animation-delay: 0.25s;
+    }
+
+    .guide-step:nth-child(6) {
+        animation-delay: 0.3s;
+    }
+
+    .guide-step:nth-child(7) {
+        animation-delay: 0.35s;
+    }
+
+    @keyframes guideStepIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .guide-step-num {
+        position: absolute;
+        left: -40px;
+        top: 18px;
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background: var(--surface);
+        border: 2px solid var(--accent);
+        color: var(--accent);
+        font-weight: 800;
+        font-size: 0.85rem;
+        display: grid;
+        place-items: center;
+        z-index: 2;
+    }
+
+    .guide-step.done .guide-step-num {
+        background: var(--accent);
+        color: #fff;
+    }
+
+    .guide-step-card {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px 20px;
+        background: var(--surface);
+        transition: all 0.2s ease;
+    }
+
+    .guide-step-card:hover {
+        border-color: rgba(108, 99, 255, 0.3);
+        box-shadow: 0 8px 24px rgba(108, 99, 255, 0.08);
+    }
+
+    .guide-step-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    .guide-step-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+    }
+
+    .guide-step-title {
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .guide-step-desc {
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.55;
+        margin: 0;
+    }
+
+    .guide-tip {
+        margin-top: 28px;
+        padding: 16px 18px;
+        border-radius: 14px;
+        background: rgba(18, 183, 106, 0.06);
+        border: 1px solid rgba(18, 183, 106, 0.15);
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .guide-tip-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(18, 183, 106, 0.12);
+        color: #12b76a;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+    }
+
+    .guide-tip p {
+        margin: 0;
+        font-size: 0.88rem;
+        line-height: 1.55;
+        color: #344054;
+    }
+
+    .guide-tip strong {
+        color: #059669;
+    }
+
+    .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: rgba(246, 247, 251, 0.88);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+        min-height: 82px;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .topbar-left,
+    .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .icon-btn,
+    .theme-btn,
+    .action-btn,
+    .email-btn {
+        height: 44px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 16px;
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 600;
+        box-shadow: 0 1px 2px rgba(16, 24, 40, 0.02);
+    }
+
+    .icon-btn {
+        width: 44px;
+        padding: 0;
+    }
+
+    .search-wrap {
+        width: min(420px, 100%);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 0 14px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .search-wrap input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--text);
+        font-size: 14px;
+    }
+
+    .theme-btn {
+        background: #fff;
+    }
+
+    .action-btn {
+        background: linear-gradient(135deg, var(--accent), #7c72ff);
+        border-color: transparent;
+        color: #fff;
+        box-shadow: 0 12px 24px rgba(108, 99, 255, 0.18);
+    }
+
+    .email-btn {
+        color: #12b76a;
+        border-color: rgba(18, 183, 106, 0.22);
+        background: rgba(18, 183, 106, 0.05);
+    }
+
+    .page-wrap {
+        padding: 28px 24px 28px;
+    }
+
+    .hero {
+        margin-bottom: 24px;
+    }
+
+    .hero h1 {
+        margin: 0 0 6px;
+        font-size: clamp(1.8rem, 2vw, 2.5rem);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+    }
+
+    .hero p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.98rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 24px;
+    }
+
+    .card-clean {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+    }
+
+    .stat-card {
+        padding: 22px;
+    }
+
+    .stat-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .stat-value {
+        font-size: clamp(1.7rem, 2vw, 2.35rem);
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 8px;
+    }
+
+    .stat-sub {
+        color: var(--muted);
+        font-size: 0.95rem;
+    }
+
+    .accent-text {
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.8fr) minmax(320px, 0.9fr);
+        gap: 18px;
+        margin-bottom: 24px;
+    }
+
+    .section-card {
+        padding: 24px;
+    }
+
+    .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .section-head h3 {
+        margin: 0 0 4px;
+        font-size: 1.7rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+    }
+
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 12px;
+        padding: 8px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--accent);
+        background: var(--accent-soft);
+        white-space: nowrap;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 18px;
+    }
+
+    .field label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: #344054;
+    }
+
+    .field input,
+    .field select,
+    .resume-upload input {
+        width: 100%;
+        height: 52px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: var(--surface-2);
+        padding: 0 16px;
+        outline: 0;
+        color: var(--text);
+        font-size: 15px;
+    }
+
+    .primary-cta {
+        width: 100%;
+        height: 54px;
+        border: 0;
+        border-radius: 16px;
+        background: linear-gradient(135deg, var(--accent), #7c72ff);
+        color: #fff;
+        font-weight: 800;
+        font-size: 1rem;
+        box-shadow: 0 14px 26px rgba(108, 99, 255, 0.18);
+    }
+
+    .meta-row {
+        margin-top: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        color: var(--muted);
+        font-size: 0.92rem;
+    }
+
+    .profile-top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 18px;
+    }
+
+    .profile-avatar {
+        width: 54px;
+        height: 54px;
+        border-radius: 16px;
+        background: rgba(18, 183, 106, 0.10);
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+    }
+
+    .profile-title {
+        font-size: 1.05rem;
+        font-weight: 800;
+        margin-bottom: 2px;
+    }
+
+    .profile-sub {
+        color: var(--muted);
+        font-size: 0.92rem;
+    }
+
+    .skills-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+    .skill-pill {
+        padding: 9px 12px;
+        border-radius: 12px;
+        background: #f4f0ff;
+        color: #5b36df;
+        font-size: 13px;
+        font-weight: 700;
+        border: 1px solid #ece7ff;
+    }
+
+    .profile-empty {
+        color: var(--muted);
+        margin-bottom: 16px;
+    }
+
+    .secondary-cta {
+        width: 100%;
+        height: 50px;
+        border-radius: 14px;
+        border: 1px solid rgba(239, 68, 68, 0.18);
+        color: var(--danger);
+        background: rgba(239, 68, 68, 0.05);
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .file-drop-zone {
+        border: 2px dashed rgba(108, 99, 255, 0.3);
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+        background: rgba(108, 99, 255, 0.03);
+        cursor: pointer;
+        display: block;
+        margin-bottom: 16px;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+
+    .file-drop-zone:hover {
+        border-color: var(--accent);
+        background: rgba(108, 99, 255, 0.08);
+    }
+
+    .file-drop-zone input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .drop-icon {
+        color: var(--accent);
+        margin-bottom: 8px;
+    }
+
+    .drop-text {
+        display: block;
+        font-weight: 700;
+        color: var(--text);
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .drop-hint {
+        display: block;
+        font-size: 0.82rem;
+        color: var(--muted);
+    }
+
+    .resume-btn {
+        width: 100%;
+        height: 50px;
+        border-radius: 14px;
+        border: 0;
+        background: #12b76a;
+        color: #fff;
+        font-weight: 800;
+    }
+
+    .table-shell {
+        overflow: hidden;
+    }
+
+    .table-head {
+        padding: 22px 24px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .table-title {
+        margin: 0;
+        font-size: 1.55rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+    }
+
+    .table-sub {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.94rem;
+    }
+
+    .table-tools {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    #jobs-container {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #jobs-container>div {
+        min-width: 920px;
+    }
+
+    .table,
+    .table> :not(caption)>*>* {
+        background: transparent !important;
+    }
+
+    .job-row:hover {
+        background: rgba(108, 99, 255, 0.03) !important;
+    }
+
+    .dropdown-menu {
+        border-radius: 14px !important;
+        border: 1px solid var(--line) !important;
+        box-shadow: var(--shadow) !important;
+    }
+
+    @media (max-width: 1199px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 991px) {
+        #sidebar {
+            transform: translateX(-100%);
+            width: 250px;
+        }
+
+        #sidebar.mobile-active {
+            transform: translateX(0);
+        }
+
+        #sidebar.mobile-active .nav-text {
+            opacity: 1;
+            width: auto;
+        }
+
+        #sidebar.mobile-active .user-details {
+            opacity: 1;
+            max-height: 150px;
+            margin-top: 10px;
+        }
+
+        #main-content,
+        #main-content.sidebar-expanded {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .topbar-inner {
+            padding: 14px 16px;
+        }
+
+        .page-wrap {
+            padding: 20px 16px 24px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-card,
+        .stat-card {
+            padding: 18px;
+        }
+
+        .section-head h3,
+        .table-title {
+            font-size: 1.35rem;
+        }
+
+        .topbar-left,
+        .topbar-right {
+            width: 100%;
+        }
+
+        .search-wrap {
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .action-btn,
+        .email-btn,
+        .theme-btn {
+            flex: 1 1 auto;
+        }
     }
 </style>
 
-<div class="dashboard-wrapper">
+<div class="dashboard-shell">
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
-    <div class="glow-orb" style="top: -100px; right: -100px;"></div>
-    <div class="glow-orb"
-        style="bottom: -100px; left: -100px; background: radial-gradient(circle, rgba(167, 139, 250, 0.08) 0%, transparent 70%);">
+
+    <div id="sidebar">
+        <a href="{% url 'home' %}" class="brand-wrap">
+            <div class="brand-badge">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+            </div>
+            <div class="nav-text">
+                <div style="font-size: 1.15rem; font-weight: 800; line-height: 1;">JobFusion</div>
+                <div style="font-size: 0.82rem; color: var(--muted); margin-top: 4px;">Smart Job Manager</div>
+            </div>
+        </a>
+
+        <div class="sidebar-menu">
+            <a href="{% url 'home' %}" class="sidebar-link">
+                <span style="min-width: 24px; display: flex; align-items: center; justify-content: center;"><svg
+                        width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg></span>
+                <span class="nav-text">Home</span>
+            </a>
+            <a href="{% url 'dashboard' %}" class="sidebar-link active">
+                <span style="min-width: 24px; display: flex; align-items: center; justify-content: center;"><svg
+                        width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg></span>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-link" onclick="event.preventDefault(); openGuidePanel();">
+                <span style="min-width: 24px; display: flex; align-items: center; justify-content: center;"><svg
+                        width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                    </svg></span>
+                <span class="nav-text">How It Works</span>
+            </a>
+            <a href="#" class="sidebar-link" onclick="event.preventDefault(); openHelpPanel();">
+                <span style="min-width: 24px; display: flex; align-items: center; justify-content: center;"><svg
+                        width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg></span>
+                <span class="nav-text">Help & Support</span>
+            </a>
+        </div>
+
+        <div class="sidebar-user">
+            <div class="user-card">
+                <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=6c63ff&color=fff"
+                    class="rounded-circle mb-2" width="52" height="52">
+                <div class="user-details">
+                    <div style="font-weight: 800;">{{ request.user.username }}</div>
+                    <div style="font-size: 0.83rem; color: var(--muted);">Enterprise Account</div>
+                    <form id="logoutForm" method="POST" action="{% url 'logout' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <button type="button" class="logout-btn" onclick="openLogoutModal()"><svg width="16" height="16"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <div id="sidebar">
-            <a href="{% url 'home' %}" class="p-4 d-flex align-items-center"
-                style="height: 100px; text-decoration: none; color: inherit;">
-                <div
-                    style="min-width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), #5b21b6); display: flex; align-items: center; justify-content: center; font-weight: 900; color: white; font-size: 18px;">
-                    JS</div>
-                <h4 class="nav-text mb-0 fw-bold" style="letter-spacing: -1px;">JobFusion</h4>
-            </a>
+    <div id="main-content">
+        <div class="topbar">
+            <div class="topbar-inner">
+                <div class="topbar-left">
+                    <button onclick="toggleSidebar()" class="icon-btn" type="button"><svg width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg></button>
 
-            <div class="mt-2 flex-grow-1">
-                <a href="{% url 'home' %}" class="sidebar-link">
-                    <span style="font-size: 1.2rem; min-width: 24px;">🏠</span>
-                    <span class="nav-text">Home</span>
-                </a>
-                <a href="{% url 'dashboard' %}" class="sidebar-link active">
-                    <span style="font-size: 1.2rem; min-width: 24px;">📊</span>
-                    <span class="nav-text">Analytics Overview</span>
-                </a>
-                <a href="#" class="sidebar-link">
-                    <span style="font-size: 1.2rem; min-width: 24px;">🔎</span>
-                    <span class="nav-text">Smart Scraper</span>
-                </a>
-                <a href="#" class="sidebar-link">
-                    <span style="font-size: 1.2rem; min-width: 24px;">📁</span>
-                    <span class="nav-text">Job Repository</span>
-                </a>
-            </div>
+                    <div class="search-wrap">
+                        <span style="color: var(--muted); display: flex; align-items: center;"><svg width="18"
+                                height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg></span>
+                        <input type="text" id="searchInput" placeholder="Search jobs, roles, companies...">
+                    </div>
+                </div>
 
-            <div class="user-profile-sidebar">
-                <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=7c5cfc&color=fff"
-                    class="rounded-circle" width="36" height="36">
-                <div class="nav-text">
-                    <div class="fw-bold" style="font-size: 14px;">{{ request.user.username }}</div>
-                    <div class="text-muted" style="font-size: 11px;">Enterprise Account</div>
-                    <form method="POST" action="{% url 'logout' %}" class="mt-1">
+                <div class="topbar-right">
+                    <div class="dropdown">
+                        <button class="theme-btn dropdown-toggle" type="button" id="themeDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                style="margin-right:6px;">
+                                <circle cx="13.5" cy="6.5" r="2.5" />
+                                <circle cx="19" cy="13.5" r="2.5" />
+                                <circle cx="6.5" cy="6.5" r="2.5" />
+                                <circle cx="6.5" cy="17.5" r="2.5" />
+                                <path d="M17 17a5 5 0 0 0-10 0" />
+                            </svg>Theme
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"
+                                    onclick="setTheme('purple'); event.preventDefault();">Purple</a></li>
+                            <li><a class="dropdown-item" href="#"
+                                    onclick="setTheme('green'); event.preventDefault();">Green</a></li>
+                            <li><a class="dropdown-item" href="#"
+                                    onclick="setTheme('gold'); event.preventDefault();">Gold</a></li>
+                            <li><a class="dropdown-item" href="#"
+                                    onclick="setTheme('light'); event.preventDefault();">Light</a></li>
+                            <li><a class="dropdown-item" href="#"
+                                    onclick="setTheme('silver'); event.preventDefault();">Silver</a></li>
+                        </ul>
+                    </div>
+
+                    <a href="{% url 'download_csv' %}" class="action-btn"><svg width="16" height="16"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>Export</a>
+
+                    <form method="POST" action="{% url 'send_email' %}" class="m-0">
                         {% csrf_token %}
-                        <button type="submit" class="border-0 bg-transparent text-danger p-0 fw-bold"
-                            style="font-size: 11px;">Sign Out</button>
+                        <button type="submit" class="email-btn"><svg width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" style="margin-right:6px;">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>Email</button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div id="main-content">
-            <nav class="navbar custom-navbar px-3 px-md-4">
-                <div class="container-fluid d-flex align-items-center justify-content-between p-0 flex-nowrap" style="overflow: visible;">
-                    
-                    <!-- Left: Hamburger & Search -->
-                    <div class="d-flex align-items-center gap-2 gap-md-3">
-                        <button onclick="toggleSidebar()" class="btn border-0 d-flex align-items-center justify-content-center flex-shrink-0"
-                            style="border-radius: 12px; background: rgba(255,255,255,0.08); width: 44px; height: 44px; color: var(--t1);">
-                            ☰
-                        </button>
-                        
-                        <div class="search-box-wrapper d-none d-sm-flex align-items-center" style="max-width: 250px;">
-                            <span class="text-muted me-2">🔍</span>
-                            <input type="text" id="searchInput" placeholder="Search..." style="width: 100%;">
+        <div class="page-wrap">
+            <div class="hero">
+                <h1>Executive Dashboard</h1>
+                <p>Track job intelligence, profile relevance, and live opportunities in one place.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="card-clean stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <line x1="16" y1="13" x2="8" y2="13" />
+                                <line x1="16" y1="17" x2="8" y2="17" />
+                                <polyline points="10 9 9 9 8 9" />
+                            </svg></div>
+                        <div>
+                            <div class="stat-label">Scraped Intelligence</div>
                         </div>
                     </div>
-
-                    <!-- Right: Controls -->
-                    <div class="d-flex align-items-center gap-2 gap-md-3">
-                        
-                        <!-- Theme Dropdown -->
-                        <div class="dropdown">
-                            <button class="btn border-0 d-flex align-items-center justify-content-center" type="button" id="themeDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); height: 40px; padding: 0 12px; color: var(--t1);">
-                                <span class="d-none d-md-inline small me-2">Theme</span>🎨
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="themeDropdown" style="background: var(--card); border: 1px solid var(--border); backdrop-filter: blur(12px); border-radius: 12px; min-width: 120px;">
-                                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#" onclick="setTheme('purple'); event.preventDefault();" style="color: var(--t1);"><div style="width:14px;height:14px;border-radius:50%;background:#7c5cfc;"></div> Purple</a></li>
-                                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#" onclick="setTheme('green'); event.preventDefault();" style="color: var(--t1);"><div style="width:14px;height:14px;border-radius:50%;background:#10b981;"></div> Green</a></li>
-                                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#" onclick="setTheme('gold'); event.preventDefault();" style="color: var(--t1);"><div style="width:14px;height:14px;border-radius:50%;background:#f59e0b;"></div> Gold</a></li>
-                                <li><a class="dropdown-item d-flex align-items-center gap-2" href="#" onclick="setTheme('light'); event.preventDefault();" style="color: var(--t1);"><div style="width:14px;height:14px;border-radius:50%;background:#fff;border:1px solid #ccc;"></div> Light</a></li>
-                            </ul>
-                        </div>
-
-                        <!-- Actions -->
-                        <a href="{% url 'download_csv' %}" class="btn-premium d-flex align-items-center justify-content-center"
-                            style="padding: 0 12px; font-size: 13px; border-radius: 10px; height: 40px; text-decoration: none;">
-                            <span class="d-none d-sm-inline">Export</span><span class="d-sm-none">📥</span>
-                        </a>
-
-                        <form method="POST" action="{% url 'send_email' %}" class="m-0">
-                            {% csrf_token %}
-                            <button type="submit" class="btn-premium d-flex align-items-center justify-content-center"
-                                style="padding: 0 12px; font-size: 13px; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; height: 40px;">
-                                <span class="d-none d-sm-inline">📧 Email</span><span class="d-sm-none">📧</span>
-                            </button>
-                        </form>
-
-                    </div>
-                </div>
-            </nav>
-
-            <div class="dashboard-content p-4">
-                <!-- Dashboard Header -->
-                <div class="mb-4">
-                    <h2 class="fw-bold">Executive Dashboard</h2>
-                    <p class="text-muted small">Real-time job market intelligence and AI-driven candidate matching.</p>
+                    <div class="stat-value accent-text">{{ total_jobs|default:"0" }}</div>
+                    <div class="stat-sub">Total records fetched</div>
                 </div>
 
-                <!-- Stats Grid (Responsive 4-2-1) -->
-                <div class="dashboard-grid mb-5">
-                    <div class="glass-card">
-                        <span class="small text-muted text-uppercase fw-bold">Scraped Intelligence</span>
-                        <div class="h2 mt-2 mb-1" style="color: var(--accent);">{{ total_jobs|default:"0" }}</div>
-                        <div class="small text-success">Total Records Fetched</div>
-                    </div>
-                    <div class="glass-card">
-                        <span class="small text-muted text-uppercase fw-bold">AI Match Score</span>
-                        <div class="h2 mt-2 mb-1">{{ avg_match|default:"0" }}%</div>
-                        <div class="small text-muted">Average Relevance</div>
-                    </div>
-                    <div class="glass-card">
-                        <span class="small text-muted text-uppercase fw-bold">Target Keyword</span>
-                        <div class="h2 mt-2 mb-1">{{ last_query|default:"N/A" }}</div>
-                        <div class="small text-muted">Primary Focus</div>
-                    </div>
-                    <div class="glass-card">
-                        <span class="small text-muted text-uppercase fw-bold">Live Platforms</span>
-                        <div class="h2 mt-2 mb-1">3</div>
-                        <div class="small text-info">LinkedIn, Indeed, Naukri</div>
-                    </div>
-                </div>
-
-                <div class="row g-4 mb-5">
-                    <!-- Scrape Section -->
-                    <div class="col-lg-8">
-                        <div class="glass-card p-4" style="height: 100%;">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h5 class="fw-bold mb-0">Intelligence Harvester</h5>
-                                <span class="badge"
-                                    style="background: rgba(124, 92, 252, 0.1); color: var(--accent2);">v2.4
-                                    Engine</span>
-                            </div>
-
-                            <form id="scrapeForm" method="POST" action="{% url 'dashboard' %}">
-                                {% csrf_token %}
-                                <div class="row g-4">
-                                    <div class="col-md-5">
-                                        <label class="small fw-bold text-muted mb-2">Primary Keyword</label>
-                                        <input type="text" name="job_title" class="form-control search-box-wrapper p-3"
-                                            style="max-width: 100%; background: rgba(0,0,0,0.2);"
-                                            placeholder="e.g. Principal Software Engineer" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="small fw-bold text-muted mb-2">Location Focus</label>
-                                        <input type="text" name="location" class="form-control search-box-wrapper p-3"
-                                            style="max-width: 100%; background: rgba(0,0,0,0.2);"
-                                            placeholder="e.g. Remote / US" required>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="small fw-bold text-muted mb-2">Platform</label>
-                                        <select name="platform" class="form-select search-box-wrapper p-3"
-                                            style="max-width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border);"
-                                            required>
-                                            <option value="linkedin">LinkedIn</option>
-                                            <option value="indeed">Indeed </option>
-                                            <option value="naukri">Naukri </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-12">
-                                        <button type="submit" id="scrapeBtn" class="btn btn-premium w-100 py-3 mt-2">
-                                            Initialize Deep Scrape Sequence
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+                <div class="card-clean stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="20" x2="18" y2="10" />
+                                <line x1="12" y1="20" x2="12" y2="4" />
+                                <line x1="6" y1="20" x2="6" y2="14" />
+                            </svg></div>
+                        <div>
+                            <div class="stat-label">AI Match Score</div>
                         </div>
                     </div>
+                    <div class="stat-value">{{ avg_match|default:"0" }}%</div>
+                    <div class="stat-sub">Average relevance</div>
+                </div>
 
-                    <!-- AI Profile Section -->
-                    <div class="col-lg-4">
-                        <div class="glass-card p-4" style="height: 100%; border-top: 4px solid #10b981 !important;">
-                            <h5 class="fw-bold mb-4">AI Candidate Profile</h5>
-                            {% if resume_data %}
-                            <div class="d-flex align-items-center gap-3 mb-4">
-                                <div
-                                    style="width: 50px; height: 50px; background: rgba(16, 185, 129, 0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-                                    👤</div>
-                                <div>
-                                    <div class="fw-bold">{{ resume_data.location }} Profile</div>
-                                    <div class="text-muted small">{{ resume_data.experience }} Years Experience</div>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-wrap gap-2 mb-4">
-                                {% for skill in resume_data.skills|slice:":6" %}
-                                <span class="badge"
-                                    style="background: rgba(124, 92, 252, 0.1); color: var(--accent2); border: 1px solid rgba(124, 92, 252, 0.15);">{{
-                                    skill }}</span>
-                                {% endfor %}
-                            </div>
-                            <a href="{% url 'jobs:clear_resume' %}" class="btn btn-outline-danger btn-sm w-100 border-0"
-                                style="background: rgba(239, 68, 68, 0.05);">Reset AI Context</a>
-                            {% else %}
-                            <p class="text-muted small mb-4">Upload your professional resume to prime the AI scoring
-                                engine.</p>
-                            <form method="POST" action="{% url 'jobs:upload_resume' %}" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <input type="file" name="resume" class="form-control mb-3"
-                                    style="background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white;"
+                <div class="card-clean stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <circle cx="12" cy="12" r="6" />
+                                <circle cx="12" cy="12" r="2" />
+                            </svg></div>
+                        <div>
+                            <div class="stat-label">Target Keyword</div>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ last_query|default:"N/A" }}</div>
+                    <div class="stat-sub">Primary focus</div>
+                </div>
+
+                <div class="card-clean stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="2" y1="12" x2="22" y2="12" />
+                                <path
+                                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg></div>
+                        <div>
+                            <div class="stat-label">Live Platforms</div>
+                        </div>
+                    </div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-sub"><span class="accent-text">LinkedIn, Indeed, Naukri</span></div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="card-clean section-card">
+                    <div class="section-head">
+                        <div>
+                            <h3>Intelligence Harvester</h3>
+                            <p>Launch multi-platform scraping with AI-assisted targeting.</p>
+                        </div>
+                        <span class="chip">v2.4 Engine</span>
+                    </div>
+
+                    <form id="scrapeForm" method="POST" action="{% url 'dashboard' %}">
+                        {% csrf_token %}
+                        <div class="form-grid">
+                            <div class="field">
+                                <label>Role</label>
+                                <input type="text" name="job_title" placeholder="e.g. Principal Software Engineer"
                                     required>
-                                <button type="submit" class="btn btn-success w-100 fw-bold"
-                                    style="background: #10b981; border: none; border-radius: 12px; padding: 12px;">Sync
-                                    Resume</button>
-                            </form>
-                            {% endif %}
+                            </div>
+                            <div class="field">
+                                <label>Location Focus</label>
+                                <input type="text" name="location" placeholder="e.g. Remote / US" required>
+                            </div>
+                            <div class="field">
+                                <label>Platform</label>
+                                <select name="platform" required>
+                                    <option value="linkedin">LinkedIn</option>
+                                    <option value="indeed">Indeed</option>
+                                    <option value="naukri">Naukri</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
+
+                        <button type="submit" id="scrapeBtn" class="primary-cta">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                style="margin-right:8px;vertical-align:middle;">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                            </svg>Initialize Deep Scrape Sequence
+                        </button>
+
+                        <div class="meta-row">
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="margin-right:4px;vertical-align:middle;">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                </svg>AI-Powered</span>
+                            <span>•</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="margin-right:4px;vertical-align:middle;">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="2" y1="12" x2="22" y2="12" />
+                                    <path
+                                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                </svg>Multi-Platform</span>
+                            <span>•</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="margin-right:4px;vertical-align:middle;">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                                </svg>Real-time</span>
+                        </div>
+                    </form>
                 </div>
 
-                <!-- Main Data Table Container -->
-                <div id="jobs-container" class="glass-card mb-5 p-0" style="overflow-x: auto; max-width: 100%;">
-                    <div style="min-width: 900px;">
+                <div class="card-clean section-card">
+                    <div class="section-head">
+                        <div>
+                            <h3>AI Candidate Profile</h3>
+                            <p>Your resume context used for intelligent job matching.</p>
+                        </div>
+                    </div>
+
+                    {% if resume_data %}
+                    <div class="profile-top">
+                        <div class="profile-avatar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg></div>
+                        <div>
+                            <div class="profile-title">{{ resume_data.location }} Profile</div>
+                            <div class="profile-sub">{{ resume_data.experience }} Years Experience</div>
+                        </div>
+                    </div>
+
+                    <div class="skills-wrap">
+                        {% for skill in resume_data.skills|slice:":8" %}
+                        <span class="skill-pill">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <a href="{% url 'jobs:clear_resume' %}" class="secondary-cta">Reset AI Context</a>
+                    {% else %}
+                    <p class="profile-empty">Upload your professional resume to improve AI scoring and relevance
+                        matching.</p>
+                    <form method="POST" action="{% url 'jobs:upload_resume' %}" enctype="multipart/form-data"
+                        class="resume-upload">
+                        {% csrf_token %}
+                        <label for="resumeInput" class="file-drop-zone">
+                            <div class="drop-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                            </div>
+                            <span class="drop-text" id="dropText">Click to browse or drag resume here</span>
+                            <span class="drop-hint">PDF, DOC, or DOCX (Max 5MB)</span>
+                            <input type="file" id="resumeInput" name="resume" accept=".pdf,.doc,.docx" required>
+                        </label>
+                        <button type="submit" class="resume-btn"><svg width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" style="margin-right:8px;vertical-align:middle;">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>Sync Resume</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card-clean table-shell">
+
+
+                <div id="jobs-container">
+                    <div>
                         {% include 'partials/job_list_partial.html' %}
                     </div>
                 </div>
@@ -672,8 +1740,21 @@
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.querySelector('.sidebar-overlay');
-        sidebar.classList.toggle('mobile-active');
-        overlay.classList.toggle('active');
+
+        if (window.innerWidth <= 991) {
+            sidebar.classList.toggle('mobile-active');
+            overlay.classList.toggle('active');
+        } else {
+            sidebar.classList.toggle('expanded');
+            document.getElementById('main-content').classList.toggle('sidebar-expanded');
+        }
+    }
+
+    function closeMobileSidebar() {
+        if (window.innerWidth <= 991) {
+            document.getElementById('sidebar').classList.remove('mobile-active');
+            document.querySelector('.sidebar-overlay').classList.remove('active');
+        }
     }
 
     function initializeTooltips() {
@@ -687,41 +1768,30 @@
             document.body.classList.add('theme-' + theme);
         }
         localStorage.setItem('selected-theme', theme);
-
-        // Update dots UI
-        document.querySelectorAll('.theme-dot').forEach(dot => {
-            dot.classList.remove('active');
-            dot.style.outline = 'none';
-            dot.style.boxShadow = 'none';
-        });
-        
-        const activeDot = document.querySelector(`.theme-dot[data-theme="${theme}"]`);
-        if (activeDot) {
-            activeDot.classList.add('active');
-            activeDot.style.outline = '2px solid #fff';
-            activeDot.style.outlineOffset = '2px';
-            activeDot.style.transform = 'scale(1.2)';
-        }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Apply saved theme
         const savedTheme = localStorage.getItem('selected-theme');
         if (savedTheme) setTheme(savedTheme);
 
         initializeTooltips();
 
-        // Auto-expand sidebar on hover if you want, or just leave it click-based
-        // const sidebar = document.getElementById('sidebar');
-        // sidebar.addEventListener('mouseenter', () => sidebar.classList.add('expanded'));
-        // sidebar.addEventListener('mouseleave', () => sidebar.classList.remove('expanded'));
-
-        document.getElementById("searchInput").addEventListener("keyup", function () {
-            let searchValue = this.value.toLowerCase();
-            let rows = document.querySelectorAll(".job-row");
-            rows.forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(searchValue) ? "" : "none";
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function () {
+                const searchValue = this.value.toLowerCase();
+                const rows = document.querySelectorAll('.job-row');
+                rows.forEach(row => {
+                    row.style.display = row.innerText.toLowerCase().includes(searchValue) ? '' : 'none';
+                });
             });
+        }
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 991) {
+                document.getElementById('sidebar').classList.remove('mobile-active');
+                document.querySelector('.sidebar-overlay').classList.remove('active');
+            }
         });
     });
 
@@ -742,41 +1812,36 @@
     if (scrapeForm) {
         scrapeForm.addEventListener('submit', function (e) {
             e.preventDefault();
+
             const btn = document.getElementById('scrapeBtn');
             const originalBtnContent = btn.innerHTML;
+
             btn.disabled = true;
-            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Processing...`;
+            btn.innerHTML = `Processing...`;
 
             const overlay = document.createElement('div');
             overlay.id = 'scraping-overlay';
             overlay.innerHTML = `
-            <div style="position:fixed;top:0;left:0;width:100%;height:100%;
-                background:rgba(4, 3, 12, 0.98);z-index:9999;backdrop-filter: blur(40px);
-                display:flex;flex-direction:column;align-items:center;justify-content:center;">
-                <div style="position:relative;">
-                    <div class="spinner-grow" style="width: 5rem; height: 5rem; color: var(--accent); opacity: 0.5;" role="status"></div>
-                    <div class="spinner-grow" style="width: 3rem; height: 3rem; color: var(--accent2); position:absolute; top:1rem; left:1rem;" role="status"></div>
+                <div style="position:fixed; inset:0; background:rgba(255,255,255,0.88); backdrop-filter:blur(10px); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                    <div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--accent);" role="status"></div>
+                    <h3 style="margin-top:20px; margin-bottom:8px; font-weight:800; color:var(--text);">Deep Scrape in Progress</h3>
+                    <p id="loadingMsg" style="margin:0; color:var(--muted); font-weight:500;">Initializing intelligent scrapers...</p>
+                    <div style="width:min(360px, 88vw); height:6px; background:#e7eaf2; border-radius:999px; overflow:hidden; margin-top:20px;">
+                        <div id="progressBar" style="height:100%; width:0%; background:linear-gradient(90deg, var(--accent), #7c72ff); transition:width .35s ease;"></div>
+                    </div>
                 </div>
-                <h3 class="fw-bold mt-5 mb-2 text-white" style="letter-spacing:-1px;">Deep Scrape in Progress</h3>
-                <p class="text-white fw-bold mb-4" id="loadingMsg" style="font-size:18px; letter-spacing: 0.5px;">Initializing neural scrapers...</p>
-                <div style="width:400px;height:4px;background:rgba(255,255,255,0.05);border-radius:10px;overflow:hidden;">
-                    <div id="progressBar" style="height:100%;width:0%;background:linear-gradient(90deg, var(--accent), var(--accent2));border-radius:10px;transition:width 0.4s;"></div>
-                </div>
-                <p class="mt-4 small text-muted">Leveraging AI to bypass platform restrictions and extract high-value leads.</p>
-            </div>`;
+            `;
             document.body.appendChild(overlay);
 
             const msgs = [
                 "Opening secure browser session...",
                 "Preparing search parameters...",
-                "Bypassing platform bot detection...",
                 "Finding relevant opportunities...",
                 "Extracting job metadata...",
-                "Collecting salary and skill details...",
-                "Organizing results for AI analysis...",
                 "Running match scoring engine...",
-                "Almost done, finalizing report..."
+                "Finalizing results..."
             ];
+
             let msgIdx = 0;
             const msgInterval = setInterval(() => {
                 const msgEl = document.getElementById('loadingMsg');
@@ -784,45 +1849,546 @@
                     msgEl.textContent = msgs[msgIdx % msgs.length];
                     msgIdx++;
                 }
-            }, 3000);
+            }, 2200);
 
             let progress = 0;
             const progressInterval = setInterval(() => {
                 const bar = document.getElementById('progressBar');
-                if (bar && progress < 95) {
-                    progress += Math.random() * 2;
-                    if (progress > 95) progress = 95;
+                if (bar && progress < 92) {
+                    progress += Math.random() * 10;
+                    if (progress > 92) progress = 92;
                     bar.style.width = progress + '%';
                 }
-            }, 800);
+            }, 700);
 
             const formData = new FormData(this);
+
             fetch(this.action, {
                 method: 'POST',
                 body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': formData.get('csrfmiddlewaretoken') }
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                }
             })
                 .then(res => res.text())
                 .then(html => {
-                    document.getElementById('jobs-container').innerHTML = html;
+                    document.getElementById('jobs-container').innerHTML = `<div>${html}</div>`;
                     initializeTooltips();
+                    if (typeof processCompanyAvatars === 'function') processCompanyAvatars();
                     clearInterval(msgInterval);
                     clearInterval(progressInterval);
-                    setTimeout(() => { overlay.remove(); btn.disabled = false; btn.innerHTML = originalBtnContent; }, 500);
+                    const bar = document.getElementById('progressBar');
+                    if (bar) bar.style.width = '100%';
+
+                    setTimeout(() => {
+                        overlay.remove();
+                        btn.disabled = false;
+                        btn.innerHTML = originalBtnContent;
+
+                        let jobsSpan = document.getElementById('jobs-container').querySelector('.badge');
+                        let match = jobsSpan ? jobsSpan.textContent.match(/\d+/) : null;
+                        let count = match ? match[0] : '';
+                        if (count && parseInt(count) > 0) {
+                            showToast(`${count} jobs scraped successfully!`, 'success');
+                        } else {
+                            showToast('Scraping completed, no new jobs found.', 'info');
+                        }
+                    }, 450);
                 })
                 .catch(() => {
                     clearInterval(msgInterval);
                     clearInterval(progressInterval);
+
                     const msgEl = document.getElementById('loadingMsg');
                     const bar = document.getElementById('progressBar');
+
                     if (msgEl) {
-                        msgEl.textContent = "Extraction failed. Unexpected platform response.";
+                        msgEl.textContent = "Extraction failed. Please try again.";
                         msgEl.style.color = "#ef4444";
                     }
                     if (bar) bar.style.background = "#ef4444";
-                    setTimeout(() => { overlay.remove(); btn.disabled = false; btn.innerHTML = originalBtnContent; }, 3000);
+
+                    setTimeout(() => {
+                        overlay.remove();
+                        btn.disabled = false;
+                        btn.innerHTML = originalBtnContent;
+                    }, 2200);
                 });
         });
+    }
+</script>
+
+<!-- Logout Confirmation Modal -->
+<div class="logout-modal-overlay" id="logoutModalOverlay">
+    <div class="logout-modal">
+        <div class="logout-modal-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+            </svg></div>
+        <h3>Sign Out?</h3>
+        <p>Are you sure you want to sign out of your account? You'll need to log in again to access your dashboard.</p>
+        <div class="logout-modal-actions">
+            <button class="logout-modal-cancel" onclick="closeLogoutModal()">Cancel</button>
+            <button class="logout-modal-confirm" onclick="confirmLogout()">Sign Out</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openLogoutModal() {
+        document.getElementById('logoutModalOverlay').classList.add('active');
+    }
+
+    function closeLogoutModal() {
+        document.getElementById('logoutModalOverlay').classList.remove('active');
+    }
+
+    function confirmLogout() {
+        document.getElementById('logoutForm').submit();
+    }
+
+    // Close modal on overlay click (outside the modal box)
+    document.getElementById('logoutModalOverlay').addEventListener('click', function (e) {
+        if (e.target === this) closeLogoutModal();
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeLogoutModal();
+    });
+</script>
+
+<!-- Help & Support Slide-Out Panel -->
+<div class="help-panel-overlay" id="helpPanelOverlay"></div>
+<div class="help-panel" id="helpPanel">
+    <div class="help-panel-header">
+        <h3><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg> Help & Support</h3>
+        <button class="help-close-btn" onclick="closeHelpPanel()">&times;</button>
+    </div>
+    <div class="help-panel-body">
+        <div class="help-section-title">Frequently Asked Questions</div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Why am I getting no results after scraping?
+                <span class="faq-arrow">▼</span>
+            </button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    Make sure you've entered a valid job title and location. Some niche roles may have fewer listings.
+                    Try broader keywords like "Developer" instead of "Junior React Developer".
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                The scraper seems slow. Is that normal?
+                <span class="faq-arrow">▼</span>
+            </button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    Yes — the scraper fetches live data from external sources, which can take 15–60 seconds depending on
+                    the number of results and network speed. The loading animation will keep you informed.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                How do I export my scraped jobs?
+                <span class="faq-arrow">▼</span>
+            </button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    Click the <strong>⬇ Export</strong> button in the top toolbar. This will download all your scraped
+                    jobs as a CSV file that you can open in Excel or Google Sheets.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                I didn't receive the email report. What should I do?
+                <span class="faq-arrow">▼</span>
+            </button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    Check your spam/junk folder first. Ensure your email is correctly configured in your profile
+                    settings. If the issue persists, submit a query below.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Can I scrape jobs from multiple locations at once?
+                <span class="faq-arrow">▼</span>
+            </button>
+            <div class="faq-answer">
+                <div class="faq-answer-inner">
+                    Currently, each scrape runs for one location at a time. You can run multiple scrapes back to back —
+                    all results will be saved to your dashboard automatically.
+                </div>
+            </div>
+        </div>
+
+        <div class="help-divider"></div>
+
+        <div class="help-section-title">Still need help?</div>
+        <div class="help-query-box">
+            <label>Describe your issue or feedback</label>
+            <textarea id="helpQueryText"
+                placeholder="e.g. I'm facing an issue with the scraper not returning results for 'Data Analyst' in Mumbai..."></textarea>
+            <button class="help-submit-btn" id="helpSubmitBtn" onclick="submitHelpQuery()">Submit Query</button>
+            <div class="help-success-msg" id="helpSuccessMsg">✅ Your query has been submitted! We'll look into it
+                shortly.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openHelpPanel() {
+        document.getElementById('helpPanel').classList.add('active');
+        document.getElementById('helpPanelOverlay').classList.add('active');
+    }
+
+    function closeHelpPanel() {
+        document.getElementById('helpPanel').classList.remove('active');
+        document.getElementById('helpPanelOverlay').classList.remove('active');
+    }
+
+    // Close on overlay click
+    document.getElementById('helpPanelOverlay').addEventListener('click', closeHelpPanel);
+
+    // Close on Escape
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeHelpPanel();
+    });
+
+    function toggleFaq(btn) {
+        const item = btn.closest('.faq-item');
+        const wasOpen = item.classList.contains('open');
+        // Close all
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        // Toggle clicked
+        if (!wasOpen) item.classList.add('open');
+    }
+
+    function submitHelpQuery() {
+        const textarea = document.getElementById('helpQueryText');
+        const btn = document.getElementById('helpSubmitBtn');
+        const msg = document.getElementById('helpSuccessMsg');
+        const query = textarea.value.trim();
+
+        if (!query) {
+            textarea.style.borderColor = '#ef4444';
+            textarea.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.12)';
+            textarea.setAttribute('placeholder', 'Please describe your issue before submitting...');
+            setTimeout(() => {
+                textarea.style.borderColor = '';
+                textarea.style.boxShadow = '';
+            }, 2000);
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Submitting...';
+
+        // Get CSRF token from cookie
+        const csrfToken = document.cookie.split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1] || document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+
+        fetch("{% url 'jobs:submit_support_query' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: 'message=' + encodeURIComponent(query),
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    textarea.value = '';
+                    msg.style.display = 'block';
+                    msg.style.background = 'rgba(18, 183, 106, 0.08)';
+                    msg.style.borderColor = 'rgba(18, 183, 106, 0.2)';
+                    msg.style.color = '#059669';
+                    msg.textContent = '✅ ' + data.message;
+                    setTimeout(() => { msg.style.display = 'none'; }, 4000);
+                } else {
+                    msg.style.display = 'block';
+                    msg.style.background = 'rgba(239, 68, 68, 0.08)';
+                    msg.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                    msg.style.color = '#ef4444';
+                    msg.textContent = '❌ ' + (data.error || 'Something went wrong.');
+                    setTimeout(() => { msg.style.display = 'none'; }, 4000);
+                }
+                btn.disabled = false;
+                btn.textContent = 'Submit Query';
+            })
+            .catch(() => {
+                msg.style.display = 'block';
+                msg.style.background = 'rgba(239, 68, 68, 0.08)';
+                msg.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                msg.style.color = '#ef4444';
+                msg.textContent = '❌ Network error. Please try again.';
+                setTimeout(() => { msg.style.display = 'none'; }, 4000);
+                btn.disabled = false;
+                btn.textContent = 'Submit Query';
+            });
+    }
+</script>
+
+<!-- How It Works Guide Panel -->
+<div class="guide-panel-overlay" id="guidePanelOverlay"></div>
+<div class="guide-panel" id="guidePanel">
+    <div class="guide-panel-header">
+        <h3><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg> How It Works</h3>
+        <button class="help-close-btn" onclick="closeGuidePanel()">&times;</button>
+    </div>
+    <div class="guide-panel-body">
+        <div class="guide-intro">
+            <p><strong>Welcome to JobFusion!</strong> Follow these simple steps to scrape jobs, match them with your
+                resume, and land your dream role.</p>
+        </div>
+
+        <div class="guide-flow">
+            <!-- Step 1 -->
+            <div class="guide-step done">
+                <div class="guide-step-num">1</div>
+                <div class="guide-step-card">
+                    <div class="guide-step-head">
+                        <div class="guide-step-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg></div>
+                        <div class="guide-step-title">Enter Job Role</div>
+                    </div>
+                    <p class="guide-step-desc">Type the role you're looking for, like <strong>"Software
+                            Engineer"</strong>, <strong>"Data Analyst"</strong>, or <strong>"Product Manager"</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="guide-step done">
+                <div class="guide-step-num">2</div>
+                <div class="guide-step-card">
+                    <div class="guide-step-head">
+                        <div class="guide-step-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg></div>
+                        <div class="guide-step-title">Set Location</div>
+                    </div>
+                    <p class="guide-step-desc">Enter your preferred location — <strong>"Remote"</strong>,
+                        <strong>"Mumbai"</strong>, <strong>"US"</strong>, or any city/country.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="guide-step done">
+                <div class="guide-step-num">3</div>
+                <div class="guide-step-card">
+                    <div class="guide-step-head">
+                        <div class="guide-step-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="2" y1="12" x2="22" y2="12" />
+                                <path
+                                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg></div>
+                        <div class="guide-step-title">Select Platform</div>
+                    </div>
+                    <p class="guide-step-desc">Choose from <strong>LinkedIn</strong>, <strong>Indeed</strong>, or
+                        <strong>Naukri</strong> — the scraper fetches live listings from your selected source.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="guide-step">
+                <div class="guide-step-num">4</div>
+                <div class="guide-step-card">
+                    <div class="guide-step-head">
+                        <div class="guide-step-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                            </svg></div>
+                        <div class="guide-step-title">Hit "Deep Scrape"</div>
+                    </div>
+                    <p class="guide-step-desc">Click the <strong>Initialize Deep Scrape Sequence</strong> button. The AI
+                        engine starts extracting jobs in real-time.</p>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="guide-step">
+                <div class="guide-step-num">5</div>
+                <div class="guide-step-card">
+                    <div class="guide-step-head">
+                        <div class="guide-step-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg></div>
+                        <div class="guide-step-title">Wait for Results</div>
+                    </div>
+                    <p class="guide-step-desc">A loading animation will appear. This takes <strong>15–60
+                            seconds</strong> depending on the platform. Jobs appear automatically in the table below.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="guide-step">
+                <div class="guide-step-num">6</div>
+                <div class="guide-step-card">
+                    <div class="guide-step-head">
+                        <div class="guide-step-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <line x1="16" y1="13" x2="8" y2="13" />
+                                <line x1="16" y1="17" x2="8" y2="17" />
+                            </svg></div>
+                        <div class="guide-step-title">Upload Resume (Optional)</div>
+                    </div>
+                    <p class="guide-step-desc">Upload your resume in the <strong>AI Candidate Profile</strong> section.
+                        The system extracts your skills and matches them against every scraped job.</p>
+                </div>
+            </div>
+
+            <!-- Step 7 -->
+            <div class="guide-step">
+                <div class="guide-step-num">7</div>
+                <div class="guide-step-card">
+                    <div class="guide-step-head">
+                        <div class="guide-step-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg></div>
+                        <div class="guide-step-title">Export & Apply</div>
+                    </div>
+                    <p class="guide-step-desc">Download results as <strong>CSV</strong>, send yourself an <strong>email
+                            report</strong>, or click <strong>Apply</strong> on any job to go directly to the listing.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="guide-tip">
+            <div class="guide-tip-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg></div>
+            <p><strong>Pro Tip:</strong> Upload your resume first, then scrape. The AI will automatically rank every new
+                job by how well it matches your skills — saving you hours of manual filtering!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openGuidePanel() {
+        document.getElementById('guidePanel').classList.add('active');
+        document.getElementById('guidePanelOverlay').classList.add('active');
+    }
+
+    function closeGuidePanel() {
+        document.getElementById('guidePanel').classList.remove('active');
+        document.getElementById('guidePanelOverlay').classList.remove('active');
+    }
+
+    document.getElementById('guidePanelOverlay').addEventListener('click', closeGuidePanel);
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeGuidePanel();
+    });
+
+    const resumeInput = document.getElementById('resumeInput');
+    if (resumeInput) {
+        resumeInput.addEventListener('change', function (e) {
+            const dropText = document.getElementById('dropText');
+            if (this.files && this.files[0]) {
+                dropText.textContent = this.files[0].name;
+                dropText.style.color = 'var(--accent)';
+            } else {
+                dropText.textContent = 'Click to browse or drag resume here';
+                dropText.style.color = 'var(--text)';
+            }
+        });
+    }
+</script>
+
+<!-- Toast Notification System -->
+<div id="toast-container"
+    style="position: fixed; bottom: 24px; right: 24px; z-index: 10600; display: flex; flex-direction: column; gap: 10px; pointer-events: none;">
+</div>
+<script>
+    function showToast(message, type = "success") {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+
+        let bgColor = type === 'success' ? 'var(--success)' : (type === 'danger' ? 'var(--danger)' : 'var(--accent)');
+        let icon = type === 'success' ? '✓' : (type === 'danger' ? '⚠️' : 'ℹ');
+
+        toast.style.cssText = `
+            background: var(--surface);
+            color: var(--t1);
+            border-left: 4px solid ${bgColor};
+            padding: 14px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14.5px;
+            transform: translateX(120%);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            pointer-events: auto;
+        `;
+
+        toast.innerHTML = `
+            <div style="background: ${bgColor}15; color: ${bgColor}; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800;">${icon}</div>
+            <div>${message}</div>
+        `;
+
+        container.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                toast.style.transform = 'translateX(0)';
+                toast.style.opacity = '1';
+            });
+        });
+
+        setTimeout(() => {
+            toast.style.transform = 'translateX(120%)';
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 400);
+        }, 3000);
     }
 </script>
 {% endblock %}
