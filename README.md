@@ -1,127 +1,84 @@
+<div align="center">
+
 # 🚀 Smart Job Manager
 
-<div align="center">
-  <p>An intelligent, AI-powered platform designed to streamline the job search process by aggregating listings from top platforms and ranking them against your resume.</p>
+AI-powered job search platform — scrapes live listings from LinkedIn, Naukri & Indeed, parses your resume, and ranks every job with a **Smart Match Score**.
+
+[![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Django-6.0-092E20?logo=django)](https://www.djangoproject.com/)
+[![Selenium](https://img.shields.io/badge/Selenium-WebDriver-43B02A?logo=selenium)](https://www.selenium.dev/)
+[![spaCy](https://img.shields.io/badge/NLP-spaCy-09A3D5?logo=spacy)](https://spacy.io/)
+
 </div>
 
 ---
 
-## 📖 Overview
+## 📸 Preview
 
-**Smart Job Manager** is a sophisticated Django-based web application that acts as your personal AI job search agent. Rather than manually scouring multiple job boards, this platform uses automated web scraping (Selenium) to fetch real-time listings from LinkedIn, Naukri, and Indeed. It then utilizes Natural Language Processing (NLP) to extract skills from your resume and assigns a **Smart Match Score** to every job, allowing you to focus on the roles you are most qualified for.
+| Homepage | Dashboard |
+|---|---|
+| ![Homepage](assets/home_page.PNG) | ![Dashboard](assets/dashboard_page.PNG) |
 
----
+<details>
+<summary>More screenshots</summary>
 
-## ✨ Key Features
+![Platform Analytics](assets/platform.PNG)
 
-*   **🤖 AI-Powered Match Scoring**: Upload your resume, and the system automatically extracts your skills, experience, and location to rank incoming jobs based on relevance.
-*   **🕷️ Multi-Platform Live Scraping**: Fetches up to 100+ fresh job listings per search directly from:
-    *   LinkedIn
-    *   Indeed
-    *   Naukri
-*   **📊 Executive Dashboard**: A clean, responsive, and glassmorphism-inspired UI to track scraped intelligence, average match scores, and application progress.
-*   **🎨 Dynamic Theming System**: Built-in UI themes (Purple, Green, Gold, Light) with persistent user preferences.
-*   **📄 Seamless Resume Parsing**: Intelligent keyword extraction system capable of reading `.pdf` and `.docx` files to build a comprehensive candidate profile.
+</details>
 
 ---
 
-## 🛠️ Technology Stack
+## ✨ Features
 
-*   **Backend Framework**: Python, Django 6.0
-*   **Web Scraping & Automation**: Selenium WebDriver, BeautifulSoup
-*   **Natural Language Processing**: spaCy (`en_core_web_sm`), Custom RegEx Extractors
-*   **Frontend**: HTML5, CSS3, Vanilla JavaScript, Bootstrap 5 (for utility structure)
-*   **Database**: SQLite (Development)
-
----
-
-## 📸 Platform Interface
-
-### 🏠 Homepage
-A premium, SaaS-style landing page designed for conversion and clarity.
-![Homepage](assets/home_page.PNG)
-
-### 📊 Executive Dashboard
-A centralized hub for initiating scrapes, managing resumes, and analyzing job matches.
-![Dashboard](assets/dashboard_page.PNG)
-
-### 📊 Platform Analytics
-Detailed views of scraped job data with AI-generated relevance scores.
-![Platform](assets/platform.PNG)
+- 🤖 **AI Match Scoring** — upload resume, get jobs ranked by relevance (skills, experience, location)
+- 🕷️ **Multi-platform scraping** — 100+ live listings per search from LinkedIn, Indeed & Naukri
+- 📄 **Resume parsing** — reads `.pdf` / `.docx`, extracts skills via NLP (spaCy)
+- 📊 **Executive dashboard** — glassmorphism UI, tracks scraped data & match scores
+- 🎨 **Theming** — Purple / Green / Gold / Light, saved per user
 
 ---
 
-## 📁 System Architecture
+## 🛠️ Tech Stack
 
-```text
-smart_job_manager/
-├── apps/
-│   ├── accounts/           # User authentication and session management
-│   ├── dashboard/          # Core dashboard views and UI handlers
-│   ├── jobs/               # Job models, logic, and database interactions
-│   ├── resume_parser/      # PDF/Docx text extraction and NLP skill matching
-│   └── scraping/           # Selenium bot scripts for LinkedIn, Indeed, Naukri
-├── config/                 # Core Django project settings and routing
-└── templates/              # Responsive HTML templates with dynamic styling
-```
+`Python` `Django 6.0` `Selenium` `BeautifulSoup` `spaCy` `Bootstrap 5` `SQLite`
 
 ---
 
-## ⚙️ Local Setup & Installation
+## ⚙️ Run Locally
 
-Follow these steps to run the project locally on your machine.
-
-**1. Clone the repository**
 ```bash
 git clone https://github.com/your-username/job-scraper-platform.git
 cd job-scraper-platform
-```
 
-**2. Create a virtual environment and install dependencies**
-```bash
 python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
+source venv/bin/activate      # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-```
-
-**3. Install NLP Models**
-```bash
 python -m spacy download en_core_web_sm
-```
 
-**4. Run Migrations & Start Server**
-```bash
-python manage.py makemigrations
 python manage.py migrate
-python manage.py runserver 0.0.0.0:8000
+python manage.py runserver
 ```
-> The application will be accessible at `http://127.0.0.1:8000/`.
+
+Visit **http://127.0.0.1:8000**
+
+> Requires [ChromeDriver](https://chromedriver.chromium.org/downloads) matching your Chrome version, added to PATH.
 
 ---
 
-## ⚠️ Important Configuration Notes
+## 🚀 Roadmap
 
-*   **Selenium WebDriver**: Ensure you have [ChromeDriver](https://chromedriver.chromium.org/downloads) installed and added to your system's PATH. The version must match your installed Google Chrome browser.
-*   **Environment Variables**: Create a `.env` file in the root directory to store sensitive configurations (e.g., SMTP email credentials for the export functionality).
-
----
-
-## 🚀 Future Roadmap
-
-*   **Advanced AI Analysis**: Integration with OpenAI/LLMs for deeper contextual resume-to-job matching.
-*   **Automated Applications**: Scripts to automatically apply to jobs that score above a 90% match threshold.
-*   **PostgreSQL Migration**: Upgrading the database for production-grade concurrency handling.
+- LLM-based contextual resume-to-job matching
+- Auto-apply for jobs scoring above 90%
+- PostgreSQL migration for production
 
 ---
 
-## 👨‍💻 Developed By
+## 👨‍💻 Author
 
-**Gautam Kumawat**  
-Passionate software engineer focused on building intelligent, scalable web applications.
-
----
+**Gautam Kumawat**
 
 <div align="center">
-  <i>If you found this project interesting or helpful, please consider giving it a ⭐ on GitHub!</i>
+
+**⭐ Star this repo if you found it useful!**
+
 </div>
- 
